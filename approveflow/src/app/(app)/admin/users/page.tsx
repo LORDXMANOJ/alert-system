@@ -26,13 +26,13 @@ export default async function UsersPage() {
         title="Users & permissions"
         description="Assign the staff roles used in this prototype. Institution and regional users keep their scope. You cannot change your own role, and every change is recorded."
       />
-      <div className="mb-6 rounded-xl border border-amber-200 bg-amber-soft p-4 text-sm text-amber-text">
+      <div className="mb-6 border border-line-2 bg-ink-3 p-4 text-sm text-lilac">
         Roles are proposed for the prototype and are not official AICTE designations. Confirm real responsibilities before any production use.
       </div>
       <Card bodyClassName="px-0 py-0" title="Accounts">
         <TableWrap>
           <table className="w-full min-w-[720px]">
-            <thead className="border-b border-slate-200 bg-canvas">
+            <thead className="border-b border-line bg-transparent">
               <tr>
                 <th className={th}>Name</th>
                 <th className={th}>Designation</th>
@@ -40,15 +40,15 @@ export default async function UsersPage() {
                 <th className={th}>Role</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-line">
               {users.rows.map((u) => {
                 const scoped = u.role === "institution" || u.role === "regional";
                 const self = u.id === actor.id;
                 return (
                   <tr key={u.id} className="align-middle">
                     <td className={td}>
-                      <p className="font-medium text-navy">{u.name}{self ? <Badge tone="info" className="ml-2">You</Badge> : null}</p>
-                      <p className="font-mono text-xs text-slate-500">{u.id}</p>
+                      <p className="font-medium text-fg">{u.name}{self ? <Badge tone="info" className="ml-2">You</Badge> : null}</p>
+                      <p className="font-mono text-xs text-fg-3">{u.id}</p>
                     </td>
                     <td className={td}>{u.designation}</td>
                     <td className={td}>{u.institution_name ?? (u.region_name ? `${u.region_name} region` : "National")}</td>
@@ -73,7 +73,7 @@ export default async function UsersPage() {
           </table>
         </TableWrap>
       </Card>
-      <p className="mt-4 text-xs text-slate-500">Roles in this list: {ROLES.map((r) => ROLE_LABELS[r]).join(", ")}. The save button is hidden for accounts that are scoped.</p>
+      <p className="mt-4 text-xs text-fg-3">Roles in this list: {ROLES.map((r) => ROLE_LABELS[r]).join(", ")}. The save button is hidden for accounts that are scoped.</p>
     </>
   );
 }

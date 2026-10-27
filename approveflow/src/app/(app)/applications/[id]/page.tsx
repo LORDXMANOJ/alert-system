@@ -74,9 +74,8 @@ export default async function ApplicationDetailPage({
   return (
     <>
       <PageHeader
-        crumbs={[{ label: "Applications", href: "/applications" }, { label: app.id }]}
+        crumbs={[{ label: "Applications", href: "/applications" }, { label: app.institution_name }, { label: app.id }]}
         title={app.title}
-        description={`${app.institution_name}${app.institution_is_new ? " · new institution" : ""} · ${app.region_name} region · ${app.category}`}
         actions={
           <>
             <Badge tone={app.status === "clarification" ? "warning" : decided ? "neutral" : "info"}>{APP_STATUS_LABELS[app.status]}</Badge>
@@ -92,20 +91,20 @@ export default async function ApplicationDetailPage({
           decided={decided}
           returned={app.status === "clarification"}
         />
-        <p className="mt-5 text-sm text-slate-600">
+        <p className="mt-5 text-sm text-fg-3">
           {decided ? (
-            <>Final outcome: <strong className="font-semibold text-navy">{DECISION_LABELS[app.decision ?? ""] ?? app.decision}</strong>. Recorded by the competent authority.</>
+            <>Final outcome: <strong className="font-semibold text-fg">{DECISION_LABELS[app.decision ?? ""] ?? app.decision}</strong>. Recorded by the competent authority.</>
           ) : app.status === "clarification" ? (
-            <>Returned for clarification: <span className="text-amber-text">{app.clarification_reason}</span></>
+            <>Returned for clarification: <span className="text-lilac">{app.clarification_reason}</span></>
           ) : (
-            <>Current stage: <strong className="font-semibold text-navy">{app.stage_name}</strong>, handled by the {ROLE_LABELS[app.stage_role as keyof typeof ROLE_LABELS]} role. {inStage ? "This is your stage." : ""}</>
+            null
           )}
         </p>
       </Card>
 
       <div className="grid gap-6 xl:grid-cols-3">
         <div className="space-y-6 xl:col-span-2">
-          <nav aria-label="Application sections" className="flex gap-1 overflow-x-auto border-b border-slate-200">
+          <nav aria-label="Application sections" className="flex gap-1 overflow-x-auto border-b border-line">
             {TABS.filter((k) => k !== "evc" || evc).map((k) => (
               <Link
                 key={k}
@@ -113,7 +112,7 @@ export default async function ApplicationDetailPage({
                 aria-current={tab === k ? "page" : undefined}
                 className={cn(
                   "-mb-px whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium capitalize transition-colors",
-                  tab === k ? "border-cobalt text-cobalt" : "border-transparent text-slate-500 hover:text-navy",
+                  tab === k ? "border-tea text-tea" : "border-transparent text-fg-3 hover:text-fg",
                 )}
               >
                 {k === "undertakings" ? "Undertakings" : k === "evc" ? "EVC" : k}
@@ -134,9 +133,9 @@ export default async function ApplicationDetailPage({
                 <Fact label="Responsible role" value={ROLE_LABELS[app.stage_role as keyof typeof ROLE_LABELS]} />
               </dl>
               {app.decision_reason ? (
-                <div className="mt-6 rounded-lg bg-canvas p-4 text-sm">
-                  <p className="font-medium text-navy">Recorded reason</p>
-                  <p className="mt-1 text-slate-700">{app.decision_reason}</p>
+                <div className="mt-6 bg-transparent p-4 text-sm">
+                  <p className="font-medium text-fg">Recorded reason</p>
+                  <p className="mt-1 text-fg-2">{app.decision_reason}</p>
                 </div>
               ) : null}
             </Card>
@@ -144,14 +143,14 @@ export default async function ApplicationDetailPage({
 
           {tab === "timeline" ? (
             <Card title="Processing timeline" description="Every transition, return and decision, newest first. Entries cannot be edited.">
-              <ol className="relative space-y-5 border-l-2 border-slate-200 pl-6">
+              <ol className="relative space-y-5 border-l-2 border-line pl-6">
                 {events.map((e) => (
                   <li key={e.id} className="relative">
-                    <span className="absolute -left-[31px] top-1 size-3 rounded-full border-2 border-white bg-cobalt ring-2 ring-slate-200" aria-hidden />
-                    <p className="text-sm font-medium text-navy">{EVENT_LABELS[e.type] ?? e.type}</p>
-                    <p className="text-sm text-slate-600">{e.detail}</p>
-                    {e.reason ? <p className="mt-1 rounded bg-amber-soft px-2 py-1 text-xs text-amber-text">Reason: {e.reason}</p> : null}
-                    <p className="mt-1 text-xs text-slate-500">
+                    <span className="absolute -left-[31px] top-1 size-3 border-2 border-white bg-tea ring-2" aria-hidden />
+                    <p className="text-sm font-medium text-fg">{EVENT_LABELS[e.type] ?? e.type}</p>
+                    <p className="text-sm text-fg-3">{e.detail}</p>
+                    {e.reason ? <p className="mt-1 bg-ink-3 px-2 py-1 text-xs text-lilac">Reason: {e.reason}</p> : null}
+                    <p className="mt-1 text-xs text-fg-3">
                       {e.actor_name ?? "System"} · {ROLE_LABELS[e.actor_role as keyof typeof ROLE_LABELS] ?? e.actor_role} · {fmtDateTime(e.created_at)}
                     </p>
                   </li>
@@ -201,7 +200,7 @@ export default async function ApplicationDetailPage({
                 <Card title="Post-visit action">
                   <ServerForm action={reportPendingAction} submit="Mark report pending" variant="secondary" resetOnSuccess={false}>
                     <input type="hidden" name="applicationId" value={app.id} />
-                    <p className="text-sm text-slate-600">If the visit report is still outstanding, mark it as report pending.</p>
+                    <p className="text-sm text-fg-3">If the visit report is still outstanding, mark it as report pending.</p>
                   </ServerForm>
                 </Card>
               ) : null}
@@ -214,12 +213,12 @@ export default async function ApplicationDetailPage({
                 {undertakings.length === 0 ? (
                   <EmptyState title="No undertakings recorded" description="Undertakings are recorded when an approval carries a time-bound condition." />
                 ) : (
-                  <ul className="divide-y divide-slate-100">
+                  <ul className="divide-y divide-line">
                     {undertakings.map((u) => (
                       <li key={String(u.id)} className="flex flex-wrap items-center justify-between gap-3 py-3">
                         <div className="min-w-0">
-                          <Link href={`/undertakings/${u.id}`} className="font-medium text-navy hover:text-cobalt hover:underline">{String(u.condition)}</Link>
-                          <p className="font-mono text-xs text-slate-500">{String(u.id)} · {UT_STATUS_LABELS[String(u.status)]}</p>
+                          <Link href={`/undertakings/${u.id}`} className="font-medium text-fg hover:text-tea hover:underline">{String(u.condition)}</Link>
+                          <p className="font-mono text-xs text-fg-3">{String(u.id)} · {UT_STATUS_LABELS[String(u.status)]}</p>
                         </div>
                         <SlaBadge dueAt={u.due_at as Date} decided={u.status === "verified"} nowDate={t} />
                       </li>
@@ -238,7 +237,7 @@ export default async function ApplicationDetailPage({
                       <Field label="Evidence required" htmlFor="ut-evidence">
                         <input id="ut-evidence" name="evidenceRequired" required minLength={5} className={inputCls} placeholder="For example: renewed lease deed (PDF)" />
                       </Field>
-                      <Field label="Due in (days)" htmlFor="ut-days" hint="Illustrative. Configure to the applicable rule.">
+                      <Field label="Due in (days)" htmlFor="ut-days" hint="Configure to the applicable rule.">
                         <input id="ut-days" name="dueInDays" type="number" required min={1} max={730} defaultValue={60} className={inputCls} />
                       </Field>
                     </div>
@@ -253,12 +252,12 @@ export default async function ApplicationDetailPage({
               {documents.length === 0 ? (
                 <EmptyState title="No linked documents" description="Lease and other prescribed documents are tracked in the document register." action={<LinkButton href="/documents" variant="secondary">Open document register</LinkButton>} />
               ) : (
-                <ul className="divide-y divide-slate-100">
+                <ul className="divide-y divide-line">
                   {documents.map((d) => (
                     <li key={String(d.id)} className="flex items-center justify-between gap-3 py-3">
                       <div>
-                        <Link href={`/documents/${d.id}`} className="font-medium text-navy hover:text-cobalt hover:underline">{String(d.title)}</Link>
-                        <p className="text-xs text-slate-500">{String(d.category)} · {Number(d.version_count)} version(s)</p>
+                        <Link href={`/documents/${d.id}`} className="font-medium text-fg hover:text-tea hover:underline">{String(d.title)}</Link>
+                        <p className="text-xs text-fg-3">{String(d.category)} · {Number(d.version_count)} version(s)</p>
                       </div>
                     </li>
                   ))}
@@ -272,12 +271,12 @@ export default async function ApplicationDetailPage({
               {alerts.length === 0 ? (
                 <EmptyState title="No alerts for this application" />
               ) : (
-                <ul className="divide-y divide-slate-100">
+                <ul className="divide-y divide-line">
                   {alerts.map((al) => (
                     <li key={String(al.id)} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
                       <div>
-                        <p className="font-medium text-navy">{String(al.rule_name)}</p>
-                        <p className="text-slate-600">{String(al.message)}</p>
+                        <p className="font-medium text-fg">{String(al.rule_name)}</p>
+                        <p className="text-fg-3">{String(al.message)}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge tone={al.threshold_key === "overdue" ? "danger" : "warning"}>{al.threshold_key === "overdue" ? "Overdue" : String(al.threshold_key)}</Badge>
@@ -294,7 +293,7 @@ export default async function ApplicationDetailPage({
             <Card title="Audit entries" description="Recorded actions for this application. Read-only.">
               <TableWrap>
                 <table className="w-full min-w-[560px]">
-                  <thead className="border-b border-slate-200 bg-canvas">
+                  <thead className="border-b border-line bg-transparent">
                     <tr>
                       <th className={th}>When</th>
                       <th className={th}>Action</th>
@@ -302,7 +301,7 @@ export default async function ApplicationDetailPage({
                       <th className={th}>Reason</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-line">
                     {audit.rows.map((a) => (
                       <tr key={a.id}>
                         <td className={td}>{fmtDateTime(a.created_at)}</td>
@@ -330,14 +329,14 @@ export default async function ApplicationDetailPage({
                 <input type="hidden" name="applicationId" value={app.id} />
                 <input type="hidden" name="count" value={checklist.length} />
                 <fieldset className="space-y-2">
-                  <legend className="mb-2 text-sm font-medium text-navy">Confirm the checklist</legend>
+                  <legend className="mb-2 text-sm font-medium text-fg">Confirm the checklist</legend>
                   {checklist.map((item, i) => (
-                    <label key={item} className="flex items-start gap-2.5 text-sm text-slate-700">
-                      <input type="checkbox" name={`c${i}`} className="mt-0.5 size-4 accent-cobalt" />
+                    <label key={item} className="flex items-start gap-2.5 text-sm text-fg-2">
+                      <input type="checkbox" name={`c${i}`} className="mt-0.5 size-4 accent-[#c1f7dc]" />
                       <span>{item}</span>
                     </label>
                   ))}
-                  {checklist.length === 0 ? <p className="text-sm text-slate-600">This stage has no checklist. Its completion condition is the visit record, if one is required.</p> : null}
+                  {checklist.length === 0 ? <p className="text-sm text-fg-3">This stage has no checklist. Its completion condition is the visit record, if one is required.</p> : null}
                 </fieldset>
                 <div className="mt-4">
                   <Field label="Observations" htmlFor="observations" hint="Optional. Visible in the timeline.">
@@ -347,7 +346,7 @@ export default async function ApplicationDetailPage({
               </ServerForm>
             ) : null}
 
-            {inStage && app.is_evc && !canComplete ? <p className="text-sm text-slate-600">Complete the EVC visit in the EVC tab first.</p> : null}
+            {inStage && app.is_evc && !canComplete ? <p className="text-sm text-fg-3">Complete the EVC visit in the EVC tab first.</p> : null}
 
             {canDecide ? (
               <ServerForm
@@ -356,14 +355,14 @@ export default async function ApplicationDetailPage({
                 variant="primary"
                 confirm={{ title: "Record the final decision?", body: "This records the outcome as the competent authority. The system does not make this decision and the record is permanent." }}
                 ariaLabel="Record decision"
-                className="mt-6 border-t border-slate-200 pt-5"
+                className="mt-6 border-t border-line pt-5"
               >
                 <input type="hidden" name="applicationId" value={app.id} />
                 <fieldset className="space-y-2">
-                  <legend className="mb-2 text-sm font-medium text-navy">Outcome</legend>
+                  <legend className="mb-2 text-sm font-medium text-fg">Outcome</legend>
                   {(["approved", "deferred", "rejected"] as const).map((o) => (
-                    <label key={o} className="flex items-center gap-2.5 text-sm text-slate-700">
-                      <input type="radio" name="outcome" value={o} required className="size-4 accent-cobalt" /> {DECISION_LABELS[o]}
+                    <label key={o} className="flex items-center gap-2.5 text-sm text-fg-2">
+                      <input type="radio" name="outcome" value={o} required className="size-4 accent-[#c1f7dc]" /> {DECISION_LABELS[o]}
                     </label>
                   ))}
                 </fieldset>
@@ -372,8 +371,8 @@ export default async function ApplicationDetailPage({
                     <textarea id="decision-reason" name="reason" required minLength={10} className={textareaCls} />
                   </Field>
                 </div>
-                <label className="mt-4 flex items-start gap-2.5 text-sm text-slate-700">
-                  <input type="checkbox" name="confirmed" required className="mt-0.5 size-4 accent-cobalt" />
+                <label className="mt-4 flex items-start gap-2.5 text-sm text-fg-2">
+                  <input type="checkbox" name="confirmed" required className="mt-0.5 size-4 accent-[#c1f7dc]" />
                   I have reviewed the history, observations and evidence.
                 </label>
               </ServerForm>
@@ -386,7 +385,7 @@ export default async function ApplicationDetailPage({
                 variant="secondary"
                 confirm={{ title: "Return this application?", body: "The institution will be asked for clarification. Give a clear reason, because it is kept in the history." }}
                 ariaLabel="Return for clarification"
-                className="mt-6 border-t border-slate-200 pt-5"
+                className="mt-6 border-t border-line pt-5"
               >
                 <input type="hidden" name="applicationId" value={app.id} />
                 <Field label="Reason for return" htmlFor="return-reason" hint="At least 10 characters.">
@@ -405,7 +404,7 @@ export default async function ApplicationDetailPage({
             ) : null}
 
             {!canComplete && !canDecide && !canReturn && !canRespond ? (
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-fg-3">
                 {decided ? "This application has a recorded decision. Nothing further is required." : app.status === "clarification" && actor.role !== "institution" ? "Waiting for the institution to respond to the clarification request." : "No action is required from you on this application right now."}
               </p>
             ) : null}
@@ -427,8 +426,8 @@ export default async function ApplicationDetailPage({
             </Card>
           ) : null}
 
-          <Card title="Stage deadline" description="Illustrative targets, configurable by an administrator.">
-            <p className="text-sm text-slate-700">
+          <Card title="Stage deadline" description="Configurable by an administrator.">
+            <p className="text-sm text-fg-2">
               Target: <span className="tnum font-semibold">{app.target_days}</span> days for {app.stage_name}. Due{" "}
               <span className="font-medium">{fmtDate(addDays(app.stage_entered_at, app.target_days))}</span>.
             </p>
@@ -442,8 +441,8 @@ export default async function ApplicationDetailPage({
 function Fact({ label, value, className }: { label: string; value: React.ReactNode; className?: string }) {
   return (
     <div className={className}>
-      <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</dt>
-      <dd className="mt-1 text-sm text-navy">{value}</dd>
+      <dt className="text-xs text-fg-3">{label}</dt>
+      <dd className="mt-1 text-sm text-fg">{value}</dd>
     </div>
   );
 }

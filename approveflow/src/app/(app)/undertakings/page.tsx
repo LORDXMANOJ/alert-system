@@ -29,7 +29,7 @@ export default async function UndertakingsPage() {
         ) : (
           <TableWrap>
             <table className="w-full min-w-[760px]">
-              <thead className="border-b border-slate-200 bg-canvas">
+              <thead className="border-b border-line bg-transparent">
                 <tr>
                   <th className={th}>Undertaking</th>
                   <th className={th}>Institution</th>
@@ -37,12 +37,12 @@ export default async function UndertakingsPage() {
                   <th className={th}>Due</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-line">
                 {rows.map((u) => (
-                  <tr key={u.id} className="hover:bg-slate-50">
+                  <tr key={u.id} className="hover:bg-ink-2">
                     <td className={td}>
-                      <Link href={`/undertakings/${u.id}`} className="font-medium text-navy hover:text-cobalt hover:underline">{u.condition}</Link>
-                      <p className="font-mono text-xs text-slate-500">{u.id} · {u.application_id}</p>
+                      <Link href={`/undertakings/${u.id}`} className="font-medium text-fg hover:text-tea hover:underline">{u.condition}</Link>
+                      <p className="font-mono text-xs text-fg-3">{u.id} · {u.application_id}</p>
                     </td>
                     <td className={td}>{u.institution_name}</td>
                     <td className={td}>

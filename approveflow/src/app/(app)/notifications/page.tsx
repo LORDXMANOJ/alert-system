@@ -37,7 +37,7 @@ export default async function NotificationsPage({ searchParams }: { searchParams
                 key={f.key}
                 href={`/notifications?filter=${f.key}`}
                 aria-current={filter === f.key ? "page" : undefined}
-                className={cn("rounded-full px-3 py-1 text-sm font-medium ring-1 ring-inset", filter === f.key ? "bg-navy text-white ring-navy" : "bg-white text-slate-600 ring-slate-300 hover:text-navy")}
+                className={cn(" px-3 py-1 text-sm font-medium ring-inset", filter === f.key ? "text-tea" : "text-fg-3 hover:text-fg")}
               >
                 {f.label}
               </Link>
@@ -48,17 +48,17 @@ export default async function NotificationsPage({ searchParams }: { searchParams
         {rows.length === 0 ? (
           <EmptyState icon={<Bell className="size-5" aria-hidden />} title={filter === "unread" ? "No unread notifications" : "No notifications yet"} />
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line">
             {rows.map((n) => (
-              <li key={n.id} className={cn("flex flex-wrap items-start gap-4 px-5 py-4", !n.read_at && "bg-cobalt-soft/50")}>
-                <span className={cn("mt-1.5 size-2.5 shrink-0 rounded-full", n.read_at ? "bg-transparent" : "bg-cobalt")} aria-hidden />
+              <li key={n.id} className={cn("flex flex-wrap items-start gap-4 px-5 py-4", !n.read_at && "bg-ink-2")}>
+                <span className={cn("mt-1.5 size-2.5 shrink-0 ", n.read_at ? "bg-transparent" : "bg-tea")} aria-hidden />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Link href={n.link} className="text-sm font-semibold text-navy hover:text-cobalt hover:underline">{n.title}</Link>
+                    <Link href={n.link} className="text-sm font-semibold text-fg hover:text-tea hover:underline">{n.title}</Link>
                     <Badge tone={SEVERITY_TONE[n.severity] ?? "neutral"}>{n.severity}</Badge>
                   </div>
-                  <p className="mt-0.5 text-sm text-slate-600">{n.body}</p>
-                  <p className="mt-1 text-xs text-slate-500">{fmtDateTime(n.created_at)}{n.read_at ? " · read" : ""}</p>
+                  <p className="mt-0.5 text-sm text-fg-3">{n.body}</p>
+                  <p className="mt-1 text-xs text-fg-3">{fmtDateTime(n.created_at)}{n.read_at ? " · read" : ""}</p>
                 </div>
                 {!n.read_at ? (
                   <ActionButton action={markReadAction.bind(null, n.id)} label="Mark read" variant="ghost" size="sm" />

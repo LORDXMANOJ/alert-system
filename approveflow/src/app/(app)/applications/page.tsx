@@ -3,9 +3,9 @@ import { ClipboardList, Filter } from "lucide-react";
 import { getCurrentActor } from "@/server/auth";
 import { getDb } from "@/server/db";
 import { now } from "@/server/clock";
-import { listApplications, isOverdue } from "@/server/services/workflow";
+import { listApplications } from "@/server/services/workflow";
 import { ROLE_LABELS, can } from "@/server/permissions";
-import { Badge, Card, EmptyState, LinkButton, PageHeader, SlaBadge, TableWrap, inputCls, selectCls, th, td, buttonClass } from "@/components/ui";
+import { Card, EmptyState, LinkButton, Mark, PageHeader, SlaBadge, TableWrap, deadlineSignal, inputCls, selectCls, th, td, buttonClass } from "@/components/ui";
 import { APP_STATUS_LABELS } from "@/lib/labels";
 
 export const dynamic = "force-dynamic";
@@ -47,8 +47,8 @@ export default async function ApplicationsPage({
   return (
     <>
       <PageHeader
-        title="Approval applications"
-        description="The register of every application in your scope. Sorted by the nearest deadline first."
+        title="Applications"
+       
         actions={
           can(actor, "app.create") ? <LinkButton href="/applications/new">New application</LinkButton> : null
         }
@@ -78,8 +78,8 @@ export default async function ApplicationsPage({
               ))}
             </select>
           </div>
-          <label className="flex h-10 items-center gap-2 rounded-md px-1 text-sm text-navy md:col-span-2">
-            <input type="checkbox" name="overdue" value="1" defaultChecked={sp.overdue === "1"} className="size-4 accent-cobalt" />
+          <label className="flex h-10 items-center gap-2 px-1 text-sm text-fg md:col-span-2">
+            <input type="checkbox" name="overdue" value="1" defaultChecked={sp.overdue === "1"} className="size-4 accent-[#c1f7dc]" />
             Overdue only
           </label>
           <div className="flex items-center gap-2 md:col-span-2">
@@ -91,9 +91,9 @@ export default async function ApplicationsPage({
           {sp.mine === "1" ? <input type="hidden" name="mine" value="1" /> : null}
         </form>
         {sp.mine === "1" || sp.q || sp.stage || sp.status || sp.overdue ? (
-          <p className="mt-3 text-sm text-slate-600">
+          <p className="mt-3 text-sm text-fg-3">
             Showing {all.length} result(s).{" "}
-            <Link href="/applications" className="font-medium text-cobalt hover:underline">Clear filters</Link>
+            <Link href="/applications" className="font-medium text-tea hover:underline">Clear filters</Link>
           </p>
         ) : null}
       </Card>
@@ -104,57 +104,55 @@ export default async function ApplicationsPage({
             icon={<ClipboardList className="size-5" aria-hidden />}
             title="No applications match these filters"
             description="Try another status or stage, or clear the search."
-            action={<Link href="/applications" className="text-sm font-medium text-cobalt hover:underline">Clear filters</Link>}
+            action={<Link href="/applications" className="text-sm font-medium text-tea hover:underline">Clear filters</Link>}
           />
         ) : (
           <TableWrap>
             <table className="w-full min-w-[860px]">
               <caption className="sr-only">Applications</caption>
-              <thead className="border-b border-slate-200 bg-canvas">
+              <thead className="border-b border-line">
                 <tr>
+                  <th scope="col" className={`${th} w-3`}><span className="sr-only">State</span></th>
                   <th scope="col" className={th}>Application</th>
                   <th scope="col" className={th}>Institution</th>
-                  <th scope="col" className={th}>Region</th>
-                  <th scope="col" className={th}>Current stage</th>
-                  <th scope="col" className={th}>Status</th>
-                  <th scope="col" className={th}>Deadline</th>
+                  <th scope="col" className={th}>Stage</th>
+                  <th scope="col" className={`${th} text-right`}>Deadline</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
-                {rows.map((a) => (
-                  <tr key={a.id} className={`hover:bg-slate-50 ${isOverdue(a) ? "bg-crimson-soft/40" : ""}`}>
-                    <td className={td}>
-                      <Link href={`/applications/${a.id}`} className="font-medium text-navy hover:text-cobalt hover:underline">
-                        {a.title}
-                      </Link>
-                      <p className="font-mono text-xs text-slate-500">{a.id} · {a.category}</p>
-                    </td>
-                    <td className={td}>
-                      {a.institution_name}
-                      {a.institution_is_new ? <Badge tone="info" className="ml-2">New institution</Badge> : null}
-                    </td>
-                    <td className={td}>{a.region_name}</td>
-                    <td className={td}>
-                      {a.status === "decided" ? "—" : a.stage_name}
-                      <p className="text-xs text-slate-500">{a.status === "decided" ? "" : ROLE_LABELS[a.stage_role as keyof typeof ROLE_LABELS]}</p>
-                    </td>
-                    <td className={td}>
-                      <Badge tone={a.status === "clarification" ? "warning" : a.status === "decided" ? "neutral" : "info"}>
-                        {APP_STATUS_LABELS[a.status]}
-                      </Badge>
-                    </td>
-                    <td className={td}>
-                      <SlaBadge dueAt={a.due_at} decided={a.status === "decided"} nowDate={t} />
-                    </td>
-                  </tr>
-                ))}
+              <tbody className="divide-y divide-line">
+                {rows.map((a) => {
+                  const sig = a.status === "decided" ? "done" : a.status === "clarification" ? "wait" : deadlineSignal(a.due_at, t).signal;
+                  const stateText = a.status === "decided" ? `Decided: ${a.decision ?? ""}` : a.status === "clarification" ? "Waiting for the institution's reply" : APP_STATUS_LABELS[a.status];
+                  return (
+                    <tr key={a.id} className="group transition-colors hover:bg-ink-2">
+                      <td className="py-3 pr-3 align-middle"><Mark signal={sig} label={stateText} size={8} /></td>
+                      <td className={td}>
+                        <Link href={`/applications/${a.id}`} className="text-fg group-hover:text-tea">{a.title}</Link>
+                        <p className="font-mono text-[11px] text-fg-3">{a.id}</p>
+                      </td>
+                      <td className={td}>
+                        <span className="inline-flex items-center gap-2">
+                          {a.institution_name}
+                          {a.institution_is_new ? <Mark signal="soon" label="New institution" size={6} /> : null}
+                        </span>
+                        <p className="text-xs text-fg-3">{a.region_name}</p>
+                      </td>
+                      <td className={td}>
+                        {a.status === "decided" ? <span className="text-fg-3">Closed</span> : a.stage_name}
+                      </td>
+                      <td className={`${td} text-right`}>
+                        <SlaBadge dueAt={a.due_at} decided={a.status === "decided"} nowDate={t} />
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </TableWrap>
         )}
         {pages > 1 ? (
-          <nav aria-label="Pagination" className="flex items-center justify-between border-t border-slate-200 px-5 py-3 text-sm">
-            <span className="text-slate-600">Page {page} of {pages}</span>
+          <nav aria-label="Pagination" className="flex items-center justify-between border-t border-line px-5 py-3 text-sm">
+            <span className="text-fg-3">Page {page} of {pages}</span>
             <div className="flex gap-2">
               {page > 1 ? <Link className={buttonClass("secondary", "sm")} href={qs({ page: String(page - 1) })}>Previous</Link> : null}
               {page < pages ? <Link className={buttonClass("secondary", "sm")} href={qs({ page: String(page + 1) })}>Next</Link> : null}

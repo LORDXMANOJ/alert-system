@@ -74,27 +74,27 @@ const REGIONS = [
 ];
 
 const INSTITUTIONS = [
-  { id: "inst-vindhya", name: "Vindhya Institute of Technology (Demo)", region: "r-central", city: "Bhopal", isNew: false },
-  { id: "inst-narmada", name: "Narmada Engineering College (Demo)", region: "r-central", city: "Jabalpur", isNew: false },
-  { id: "inst-godavari", name: "Godavari Institute of Management (Demo)", region: "r-south", city: "Vijayawada", isNew: false },
-  { id: "inst-kaveri", name: "Kaveri Polytechnic (Demo)", region: "r-south", city: "Mysuru", isNew: false },
-  { id: "inst-cauvery", name: "Cauvery Institute of Architecture (Demo)", region: "r-south", city: "Tiruchirappalli", isNew: false },
-  { id: "inst-ganga", name: "Ganga Valley Technical Institute (Demo)", region: "r-east", city: "Patna", isNew: false },
-  { id: "inst-himalaya", name: "Himalaya School of Engineering (Demo)", region: "r-north", city: "Dehradun", isNew: true },
-  { id: "inst-sahyadri", name: "Sahyadri College of Applied Sciences (Demo)", region: "r-west", city: "Pune", isNew: true },
+  { id: "inst-vindhya", name: "Vindhya Institute of Technology", region: "r-central", city: "Bhopal", isNew: false },
+  { id: "inst-narmada", name: "Narmada Engineering College", region: "r-central", city: "Jabalpur", isNew: false },
+  { id: "inst-godavari", name: "Godavari Institute of Management", region: "r-south", city: "Vijayawada", isNew: false },
+  { id: "inst-kaveri", name: "Kaveri Polytechnic", region: "r-south", city: "Mysuru", isNew: false },
+  { id: "inst-cauvery", name: "Cauvery Institute of Architecture", region: "r-south", city: "Tiruchirappalli", isNew: false },
+  { id: "inst-ganga", name: "Ganga Valley Technical Institute", region: "r-east", city: "Patna", isNew: false },
+  { id: "inst-himalaya", name: "Himalaya School of Engineering", region: "r-north", city: "Dehradun", isNew: true },
+  { id: "inst-sahyadri", name: "Sahyadri College of Applied Sciences", region: "r-west", city: "Pune", isNew: true },
 ];
 
 const USERS = [
-  { id: "u-admin", name: "Dr. Asha Verma", designation: "Demo administrator", role: "admin", region: null, inst: null },
-  { id: "u-regional", name: "Ravi Kumar", designation: "Demo regional officer, Central", role: "regional", region: "r-central", inst: null },
-  { id: "u-bureau", name: "Meera Nair", designation: "Demo bureau officer", role: "bureau", region: null, inst: null },
-  { id: "u-evc", name: "Suresh Pillai", designation: "Demo EVC coordinator", role: "evc", region: null, inst: null },
-  { id: "u-reviewer", name: "Anita Desai", designation: "Demo committee reviewer", role: "reviewer", region: null, inst: null },
-  { id: "u-authority", name: "Prof. Vikram Rao", designation: "Demo competent authority", role: "authority", region: null, inst: null },
-  { id: "u-auditor", name: "Farah Sheikh", designation: "Demo auditor (read-only)", role: "auditor", region: null, inst: null },
-  { id: "u-inst-vindhya", name: "Demo user, Vindhya", designation: "Institution user", role: "institution", region: null, inst: "inst-vindhya" },
-  { id: "u-inst-narmada", name: "Demo user, Narmada", designation: "Institution user", role: "institution", region: null, inst: "inst-narmada" },
-  { id: "u-inst-himalaya", name: "Demo user, Himalaya", designation: "Institution user", role: "institution", region: null, inst: "inst-himalaya" },
+  { id: "u-admin", name: "Dr. Asha Verma", designation: "Administrator", role: "admin", region: null, inst: null },
+  { id: "u-regional", name: "Ravi Kumar", designation: "Regional officer, Central", role: "regional", region: "r-central", inst: null },
+  { id: "u-bureau", name: "Meera Nair", designation: "Bureau officer", role: "bureau", region: null, inst: null },
+  { id: "u-evc", name: "Suresh Pillai", designation: "EVC coordinator", role: "evc", region: null, inst: null },
+  { id: "u-reviewer", name: "Anita Desai", designation: "Committee reviewer", role: "reviewer", region: null, inst: null },
+  { id: "u-authority", name: "Prof. Vikram Rao", designation: "Competent authority", role: "authority", region: null, inst: null },
+  { id: "u-auditor", name: "Farah Sheikh", designation: "Auditor", role: "auditor", region: null, inst: null },
+  { id: "u-inst-vindhya", name: "Kavya Iyer", designation: "Registrar, Vindhya Institute of Technology", role: "institution", region: null, inst: "inst-vindhya" },
+  { id: "u-inst-narmada", name: "Arjun Mehta", designation: "Registrar, Narmada Engineering College", role: "institution", region: null, inst: "inst-narmada" },
+  { id: "u-inst-himalaya", name: "Neha Bisht", designation: "Registrar, Himalaya School of Engineering", role: "institution", region: null, inst: "inst-himalaya" },
 ];
 
 const RULES = [
@@ -127,7 +127,7 @@ const RULES = [
 
 /** Placeholder bytes for demo files. They are labelled as demo content inside the file. */
 function demoFile(label: string): Uint8Array {
-  return new TextEncoder().encode(`%PDF-1.4\n% DEMONSTRATION PLACEHOLDER - fictional sample: ${label}\n%%EOF\n`);
+  return new TextEncoder().encode(`%PDF-1.4\n% Sample document: ${label}\n%%EOF\n`);
 }
 
 type AppSeed = {
@@ -241,7 +241,7 @@ export async function seedDemo(db: Db): Promise<void> {
 
       // Timeline: submission, earlier stage completions, then the current state.
       const events: { type: string; actor: string; role: string; from?: number; to?: number; reason?: string; detail: string; at: Date }[] = [
-        { type: "submitted", actor: instUser[a.inst] ?? "u-admin", role: "institution", to: 1, detail: "Application submitted (demonstration data).", at: submittedAt },
+        { type: "submitted", actor: instUser[a.inst] ?? "u-admin", role: "institution", to: 1, detail: "Application submitted.", at: submittedAt },
       ];
       const span = a.submittedAgo - a.elapsed;
       for (let p = 1; p < a.pos; p++) {
@@ -254,10 +254,10 @@ export async function seedDemo(db: Db): Promise<void> {
       if (a.evc) {
         events.push({ type: "evc_queued", actor: "u-admin", role: "admin", detail: "Placed in the EVC queue (awaiting scheduling).", at: stageEntered });
         if (a.evc.scheduledIn !== undefined) {
-          events.push({ type: "evc_scheduled", actor: "u-evc", role: "evc", detail: "Visit scheduled (demonstration data).", at: day(base, -2) });
+          events.push({ type: "evc_scheduled", actor: "u-evc", role: "evc", detail: "Visit scheduled.", at: day(base, -2) });
         }
         if (a.evc.completedAgo !== undefined) {
-          events.push({ type: "evc_visit_completed", actor: "u-evc", role: "evc", detail: "Visit completed; observations recorded (demonstration data).", at: day(base, -a.evc.completedAgo) });
+          events.push({ type: "evc_visit_completed", actor: "u-evc", role: "evc", detail: "Visit completed; observations recorded.", at: day(base, -a.evc.completedAgo) });
         }
       }
       if (a.status === "clarification") {
@@ -284,7 +284,7 @@ export async function seedDemo(db: Db): Promise<void> {
             a.evc.scheduledIn !== undefined ? day(base, a.evc.scheduledIn) : null,
             a.evc.completedAgo !== undefined ? day(base, -a.evc.completedAgo) : null,
             a.evc.scheduledIn !== undefined || a.evc.completedAgo !== undefined ? "u-evc" : null,
-            a.evc.completedAgo !== undefined ? "Visit completed (demonstration data)." : "",
+            a.evc.completedAgo !== undefined ? "Visit completed." : "",
             stageEntered,
           ],
         );
@@ -292,9 +292,9 @@ export async function seedDemo(db: Db): Promise<void> {
     }
 
     for (const f of [
-      { id: "F-DEMO-0001", inst: "inst-narmada", name: "fire-safety-certificate-demo.pdf", by: "u-inst-narmada" },
-      { id: "F-DEMO-0002", inst: "inst-vindhya", name: "seminar-hall-photos-demo.pdf", by: "u-inst-vindhya" },
-      { id: "F-DEMO-0003", inst: "inst-himalaya", name: "land-use-letter-demo.pdf", by: "u-inst-himalaya" },
+      { id: "F-DEMO-0001", inst: "inst-narmada", name: "fire-safety-certificate.pdf", by: "u-inst-narmada" },
+      { id: "F-DEMO-0002", inst: "inst-vindhya", name: "seminar-hall-photos.pdf", by: "u-inst-vindhya" },
+      { id: "F-DEMO-0003", inst: "inst-himalaya", name: "land-use-letter.pdf", by: "u-inst-himalaya" },
     ]) {
       await tx.query(
         "INSERT INTO files (id, institution_id, name, mime, size, data, uploaded_by, created_at) VALUES ($1,$2,$3,'application/pdf',$4,$5,$6,$7)",
@@ -313,21 +313,21 @@ export async function seedDemo(db: Db): Promise<void> {
 
     await tx.query(
       `INSERT INTO undertaking_submissions (undertaking_id, version_no, note, file_id, submitted_by, submitted_at, review_status, remarks)
-       VALUES ('UT-0001', 1, 'Certificate renewed; log attached (demonstration data).', 'F-DEMO-0001', 'u-inst-narmada', $1, 'pending', NULL)`,
+       VALUES ('UT-0001', 1, 'Certificate renewed; log attached.', 'F-DEMO-0001', 'u-inst-narmada', $1, 'pending', NULL)`,
       [day(base, -3)],
     );
     await tx.query(
       `INSERT INTO undertaking_submissions (undertaking_id, version_no, note, file_id, submitted_by, submitted_at, review_status, reviewer_id, remarks, reviewed_at)
-       VALUES ('UT-0004', 1, 'Permission letter attached (demonstration data).', 'F-DEMO-0003', 'u-inst-himalaya', $1, 'correction_requested', 'u-reviewer', 'The letter must name the new lab wing and carry the date of issue.', $2)`,
+       VALUES ('UT-0004', 1, 'Permission letter attached.', 'F-DEMO-0003', 'u-inst-himalaya', $1, 'correction_requested', 'u-reviewer', 'The letter must name the new lab wing and carry the date of issue.', $2)`,
       [day(base, -8), day(base, -6)],
     );
     await tx.query(
-      "INSERT INTO files (id, institution_id, name, mime, size, data, uploaded_by, created_at) VALUES ('F-DEMO-0004','inst-godavari','safety-certificate-demo.pdf','application/pdf',$1,$2,'u-admin',$3)",
+      "INSERT INTO files (id, institution_id, name, mime, size, data, uploaded_by, created_at) VALUES ('F-DEMO-0004','inst-godavari','safety-certificate.pdf','application/pdf',$1,$2,'u-admin',$3)",
       [demoFile("safety").length, demoFile("safety"), base],
     );
     await tx.query(
       `INSERT INTO undertaking_submissions (undertaking_id, version_no, note, file_id, submitted_by, submitted_at, review_status, reviewer_id, remarks, reviewed_at)
-       VALUES ('UT-0005', 1, 'Safety certificate attached (demonstration data).', 'F-DEMO-0004', 'u-admin', $1, 'accepted', 'u-reviewer', 'Certificate verified against the issuing record.', $2)`,
+       VALUES ('UT-0005', 1, 'Safety certificate attached.', 'F-DEMO-0004', 'u-admin', $1, 'accepted', 'u-reviewer', 'Certificate verified against the issuing record.', $2)`,
       [day(base, -40), day(base, -38)],
     );
 
@@ -367,7 +367,7 @@ export async function seedDemo(db: Db): Promise<void> {
     }
 
     await audit(tx, null, "system.seeded", "system", null, {
-      note: "Demonstration data loaded. All records are fictional.",
+      note: "Sample records loaded.",
       applications: APPS.length,
       undertakings: UNDERTAKINGS.length,
       documents: DOCUMENTS.length,

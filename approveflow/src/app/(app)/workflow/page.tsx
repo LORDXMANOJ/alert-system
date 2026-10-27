@@ -51,7 +51,7 @@ export default async function WorkflowPage() {
             <Card key={id} title={g.category} description={g.name}>
               <TableWrap>
                 <table className="w-full min-w-[420px]">
-                  <thead className="border-b border-slate-200 bg-canvas">
+                  <thead className="border-b border-line bg-transparent">
                     <tr>
                       <th className={th}>Stage</th>
                       <th className={th}>Role</th>
@@ -59,19 +59,19 @@ export default async function WorkflowPage() {
                       <th className={th}>Overdue</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-line">
                     {g.stages.map((s) => (
                       <tr key={s.position}>
                         <td className={td}>
-                          <span className="font-medium text-navy">{s.position}. {s.stage_name}</span>
-                          <p className="text-xs text-slate-500">{s.target_days}-day target{s.is_evc ? " · EVC" : ""}{s.is_decision ? " · final" : ""}</p>
+                          <span className="font-medium text-fg">{s.position}. {s.stage_name}</span>
+                          <p className="text-xs text-fg-3">{s.target_days}-day target{s.is_evc ? " · EVC" : ""}{s.is_decision ? " · final" : ""}</p>
                         </td>
                         <td className={td}>{ROLE_LABELS[s.role]}</td>
                         <td className={td}>
-                          <Link href={`/applications?stage=${s.role}`} className="tnum font-medium text-cobalt hover:underline">{s.open_count}</Link>
+                          <Link href={`/applications?stage=${s.role}`} className="tnum font-medium text-tea hover:underline">{s.open_count}</Link>
                         </td>
                         <td className={td}>
-                          {s.overdue_count > 0 ? <Badge tone="danger">{s.overdue_count}</Badge> : <span className="tnum text-slate-500">0</span>}
+                          {s.overdue_count > 0 ? <Badge tone="danger">{s.overdue_count}</Badge> : <span className="tnum text-fg-3">0</span>}
                         </td>
                       </tr>
                     ))}

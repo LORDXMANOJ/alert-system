@@ -97,7 +97,66 @@ export async function overviewData(db: Db, actor: Actor) {
     scope.params,
   );
 
+  // The flow: open applications per stage, split by deadline health.
+  const STAGE_ORDER = ["Scrutiny", "Re-scrutiny", "EVC visit", "Committee review", "Competent decision"];
+  const flowMap = new Map<string, { stage: string; role: string; ok: number; soon: number; late: number; wait: number; total: number }>();
+  for (const a of open) {
+    const f = flowMap.get(a.stage_name) ?? { stage: a.stage_name, role: a.stage_role, ok: 0, soon: 0, late: 0, wait: 0, total: 0 };
+    const daysLeft = Math.floor((a.due_at.getTime() - t.getTime()) / 86400000);
+    if (a.status === "clarification") f.wait += 1;
+    else if (daysLeft < 0) f.late += 1;
+    else if (daysLeft <= 7) f.soon += 1;
+    else f.ok += 1;
+    f.total += 1;
+    flowMap.set(a.stage_name, f);
+  }
+  const flow = [...flowMap.values()].sort((x, y) => STAGE_ORDER.indexOf(x.stage) - STAGE_ORDER.indexOf(y.stage));
+
+  // Activity: recorded events per day for the last 30 days.
+  const since = addDays(t, -29);
+  const act = await db.query<{ day: string; n: number }>(
+    `SELECT to_char(e.created_at, 'YYYY-MM-DD') AS day, COUNT(*)::int AS n
+     FROM application_events e JOIN applications a ON a.id = e.application_id
+     WHERE ${scope.sql} AND e.created_at >= $${scope.params.length + 1}
+     GROUP BY 1`,
+    [...scope.params, since],
+  );
+  const actMap = new Map(act.rows.map((r) => [r.day, r.n]));
+  const activity = Array.from({ length: 30 }, (_, i) => {
+    const d = addDays(since, i);
+    const key = d.toISOString().slice(0, 10);
+    return { day: key, n: actMap.get(key) ?? 0 };
+  });
+
+  const regionMap = new Map<string, { region: string; open: number; late: number }>();
+  for (const a of open) {
+    const r = regionMap.get(a.region_name) ?? { region: a.region_name, open: 0, late: 0 };
+    r.open += 1;
+    if (isOverdue(a)) r.late += 1;
+    regionMap.set(a.region_name, r);
+  }
+  const regions = [...regionMap.values()].sort((x, y) => y.open - x.open);
+
+  const escalations = await db.query<{ created_at: Date; level: number; entity_label: string; link: string; to_role: string }>(
+    `SELECT e.created_at, e.level, al.entity_label, al.link, e.to_role
+     FROM escalation_events e JOIN alerts al ON al.id = e.alert_id
+     WHERE ${alertScope.sql} AND al.status <> 'resolved'
+     ORDER BY e.created_at DESC, e.level DESC LIMIT 5`,
+    alertScope.params,
+  );
+
+  const attention =
+    actor.role === "admin" || actor.role === "regional" || actor.role === "auditor"
+      ? open.filter((a) => isOverdue(a) || a.due_at.getTime() - t.getTime() < 7 * 86400000).slice(0, 6)
+      : queue;
+
   return {
+    flow,
+    activity,
+    regions,
+    escalations: escalations.rows,
+    attention,
+    openApps: open.slice(0, 8),
     kpis: {
       open: open.length,
       overdue: open.filter((a) => isOverdue(a)).length,

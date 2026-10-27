@@ -47,7 +47,7 @@ Sign-in is **demo authentication**: pick a fictional account card. It is not pro
 | Committee reviewer | Anita Desai | Re-scrutiny and committee stage, verify evidence and renewals |
 | Competent authority | Prof. Vikram Rao | Record the final decision (never automatic) |
 | Auditor | Farah Sheikh | Read-only: pendency, reports, audit trail |
-| Institution user | Demo user, Vindhya / Narmada / Himalaya | Own institution only: respond, submit evidence, upload renewals |
+| Institution user | Kavya Iyer (Vindhya), Arjun Mehta (Narmada), Neha Bisht (Himalaya) | Own institution only: respond, submit evidence, upload renewals |
 
 The role names are proposed for the prototype. They are not official designations.
 

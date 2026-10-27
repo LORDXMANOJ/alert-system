@@ -1,28 +1,20 @@
 import Link from "next/link";
-import { CalendarClock, CheckCircle2, ClipboardList, FileWarning, Inbox, ShieldAlert } from "lucide-react";
+import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
 import { getCurrentActor } from "@/server/auth";
 import { getDb } from "@/server/db";
-import { ROLE_LABELS, type Role } from "@/server/permissions";
 import { overviewData } from "@/server/services/overview";
-import { now } from "@/server/clock";
-import { Card, EmptyState, Kpi, PageHeader, SlaBadge, Badge, LinkButton, TableWrap, th, td } from "@/components/ui";
-import { AnimatedNumber } from "@/components/animated-number";
-import { PendencyChart } from "@/components/pendency-chart";
-import { EVC_STATUS_LABELS } from "@/server/services/evc";
 import { documentValidity } from "@/server/services/compliance";
+import { now } from "@/server/clock";
+import { Card, LinkButton, SlaBadge, ValidityBar, cn, deadlineSignal, signalBg } from "@/components/ui";
+import { Tip } from "@/components/tip";
+import { UT_STATUS_LABELS } from "@/lib/labels";
+import towers from "../../../public/images/towers.jpg";
+import campus from "../../../public/images/campus.jpg";
 
 export const dynamic = "force-dynamic";
 
-const ROLE_HEADLINE: Record<Role, string> = {
-  admin: "National view of approvals, deadlines and alerts.",
-  institution: "Your applications, clarification requests and compliance deadlines.",
-  regional: "Pendency and overdue work across your region.",
-  bureau: "Your scrutiny queue and the cases that need attention.",
-  evc: "EVC scheduling, upcoming visits and delayed cases.",
-  reviewer: "Cases to re-scrutinise and evidence waiting for review.",
-  authority: "Cases waiting for a decision. Decisions are always yours to record.",
-  auditor: "Read-only view of pendency, compliance and the audit trail.",
-};
+const STAGE_ROLE_LINK: Record<string, string> = { bureau: "bureau", reviewer: "reviewer", evc: "evc", authority: "authority" };
 
 export default async function OverviewPage() {
   const actor = (await getCurrentActor())!;
@@ -30,114 +22,227 @@ export default async function OverviewPage() {
   const data = await overviewData(db, actor);
   const t = now();
   const k = data.kpis;
-  const isInstitution = actor.role === "institution";
+
+  if (actor.role === "institution") return <InstitutionHome data={data} t={t} />;
+
+  const total = Math.max(1, data.flow.reduce((s, f) => s + f.total, 0));
+  const maxDay = Math.max(1, ...data.activity.map((a) => a.n));
+  const maxRegion = Math.max(1, ...data.regions.map((r) => r.open));
 
   return (
-    <>
-      <PageHeader
-        title={`Welcome, ${actor.name}`}
-        description={`${ROLE_LABELS[actor.role]} · ${ROLE_HEADLINE[actor.role]}`}
-        actions={
-          actor.role === "institution" ? (
-            <LinkButton href="/applications/new">New application</LinkButton>
-          ) : actor.role === "bureau" ? (
-            <LinkButton href="/applications/new">New application</LinkButton>
-          ) : null
-        }
-      />
-
-      <section aria-label="Key figures" className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {isInstitution ? (
-          <>
-            <Kpi label="Awaiting your response" value={<AnimatedNumber value={k.queue} />} href="/applications?status=clarification" tone={k.queue ? "warning" : "neutral"} />
-            <Kpi label="Open applications" value={<AnimatedNumber value={k.open} />} href="/applications" tone="info" />
-            <Kpi label="Undertakings due in 30 days" value={<AnimatedNumber value={k.undertakingsDue} />} href="/undertakings" tone={k.undertakingsDue ? "warning" : "neutral"} />
-            <Kpi label="Documents needing attention" value={<AnimatedNumber value={k.documentsAttention} />} href="/documents" tone={k.documentsAttention ? "danger" : "neutral"} />
-          </>
-        ) : (
-          <>
-            <Kpi label={actor.role === "authority" ? "Awaiting decision" : "In your queue"} value={<AnimatedNumber value={k.queue} />} href="/applications?mine=1" tone="info" />
-            <Kpi label="Open applications" value={<AnimatedNumber value={k.open} />} href="/applications" />
-            <Kpi label="Overdue applications" value={<AnimatedNumber value={k.overdue} />} href="/applications?overdue=1" tone={k.overdue ? "danger" : "neutral"} />
-            <Kpi label="Open alerts" value={<AnimatedNumber value={k.openAlerts} />} href="/alerts" tone={k.openAlerts ? "warning" : "neutral"} />
-          </>
-        )}
+    <div className="space-y-14">
+      {/* Headline as a sentence: the state of the day, numbers coloured by meaning */}
+      <section className="flex flex-wrap items-end justify-between gap-6">
+        <h1 className="max-w-3xl font-display text-[30px] font-light leading-[1.2] tracking-[-0.02em] text-fg sm:text-[40px]">
+          <Link href="/applications" className="text-fg hover:text-tea">{k.open} open</Link>
+          <span className="text-fg-3">, </span>
+          <Link href="/applications?overdue=1" className={k.overdue ? "text-late hover:underline" : "text-fg"}>{k.overdue} overdue</Link>
+          <span className="text-fg-3">, </span>
+          <Link href="/alerts" className={k.openAlerts ? "text-lilac hover:underline" : "text-fg"}>{k.openAlerts} alerts</Link>
+          <span className="text-fg-3">.</span>
+        </h1>
+        <p className="font-mono text-xs text-fg-3">{t.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</p>
       </section>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-3">
-        <div className="space-y-6 xl:col-span-2">
-          <Card
-            title={isInstitution ? "Clarifications and your open applications" : "Your queue"}
-            description={isInstitution ? "Applications the office has returned, or is still reviewing." : "Applications waiting at your stage, most urgent first."}
-            actions={<Link href="/applications" className="text-sm font-medium text-cobalt hover:underline">View all</Link>}
-            bodyClassName="px-0 py-0"
-          >
-            {data.queue.length === 0 ? (
-              <EmptyState
-                icon={<Inbox className="size-5" aria-hidden />}
-                title="Nothing waiting for you"
-                description="New work appears here as soon as the previous stage is completed."
-              />
+      {/* The flow: every stage, sized by open cases, coloured by health */}
+      <section aria-label="Applications by stage">
+        <div className="grid gap-x-1" style={{ gridTemplateColumns: data.flow.map((f) => `${Math.max(f.total / total, 0.12)}fr`).join(" ") }}>
+          {data.flow.map((f, i) => (
+            <Link key={f.stage} href={`/applications?stage=${STAGE_ROLE_LINK[f.role] ?? ""}`} className="group block min-w-0">
+              <p className="tnum font-display text-[28px] font-light leading-none text-fg transition-colors group-hover:text-tea">{f.total}</p>
+              <p className="mt-2 truncate text-[13px] text-fg-3 group-hover:text-fg-2">{f.stage}</p>
+              <div className="af-grow mt-4 flex h-3 gap-px" style={{ animationDelay: `${i * 90}ms` }}>
+                {([
+                  ["late", f.late, "overdue"],
+                  ["soon", f.soon, "due within 7 days"],
+                  ["wait", f.wait, "waiting for the institution"],
+                  ["ok", f.ok, "on track"],
+                ] as const).map(([sig, n, label]) =>
+                  n > 0 ? (
+                    <Tip key={sig} label={`${f.stage}: ${n} ${label}`} className="h-full" style={{ width: `${(n / f.total) * 100}%`, minWidth: 6 }}>
+                      <span className={cn("block h-full w-full", signalBg(sig))} />
+                    </Tip>
+                  ) : null,
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-5 flex flex-wrap gap-5 text-xs text-fg-3" aria-hidden>
+          {([["late", "Overdue"], ["soon", "Due this week"], ["wait", "With institution"], ["ok", "On track"]] as const).map(([s, l]) => (
+            <span key={s} className="inline-flex items-center gap-2"><span className={cn("size-2", signalBg(s))} />{l}</span>
+          ))}
+        </div>
+      </section>
+
+      <div className="grid gap-x-14 gap-y-12 xl:grid-cols-[1.6fr_1fr]">
+        <Card
+          title={actor.role === "admin" || actor.role === "regional" || actor.role === "auditor" ? "Needs attention" : "Your desk"}
+          actions={<Link href="/applications" className="inline-flex items-center gap-1 text-[13px] text-fg-3 hover:text-tea">All <ArrowUpRight className="size-3.5" /></Link>}
+        >
+          {data.attention.length === 0 ? (
+            <div className="relative h-56 overflow-hidden">
+              <Image src={towers} alt="City towers seen through rain on glass" fill sizes="50vw" className="object-cover grayscale" />
+              <div className="absolute inset-0 bg-grape/60 mix-blend-multiply" aria-hidden />
+              <p className="absolute bottom-5 left-5 font-display text-xl font-light text-fg">Nothing waiting on your desk.</p>
+            </div>
+          ) : (
+            <ul className="divide-y divide-line">
+              {data.attention.map((a) => {
+                const s = deadlineSignal(a.due_at, t, a.status === "decided");
+                return (
+                  <li key={a.id}>
+                    <Link href={`/applications/${a.id}`} className="group grid grid-cols-[3px_1fr_auto] items-center gap-4 py-3.5 transition-colors hover:bg-ink-2">
+                      <span className={cn("h-9", signalBg(a.status === "clarification" ? "wait" : s.signal))} aria-hidden />
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm text-fg group-hover:text-tea">{a.title}</span>
+                        <span className="block truncate text-xs text-fg-3">{a.institution_name} <span className="font-mono">{a.id}</span></span>
+                      </span>
+                      <span className="flex items-center gap-4 pr-2">
+                        <span className="hidden text-xs text-fg-3 sm:inline">{a.stage_name}</span>
+                        <SlaBadge dueAt={a.due_at} nowDate={t} />
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </Card>
+
+        <div className="space-y-12">
+          <Card title="Escalated" actions={<Link href="/alerts" className="text-[13px] text-fg-3 hover:text-tea">Open</Link>}>
+            {data.escalations.length === 0 ? (
+              <p className="py-4 text-sm text-fg-3">No escalations.</p>
             ) : (
-              <TableWrap>
-                <table className="w-full min-w-[560px]">
-                  <thead className="border-y border-slate-200 bg-canvas">
-                    <tr>
-                      <th className={th}>Application</th>
-                      <th className={th}>Institution</th>
-                      <th className={th}>Stage</th>
-                      <th className={th}>Deadline</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {data.queue.map((a) => (
-                      <tr key={a.id} className="hover:bg-slate-50">
-                        <td className={td}>
-                          <Link href={`/applications/${a.id}`} className="font-medium text-navy hover:text-cobalt hover:underline">
-                            {a.title}
-                          </Link>
-                          <p className="font-mono text-xs text-slate-500">{a.id}</p>
-                        </td>
-                        <td className={td}>{a.institution_name}</td>
-                        <td className={td}>{a.status === "clarification" ? <Badge tone="warning">Clarification</Badge> : a.stage_name}</td>
-                        <td className={td}><SlaBadge dueAt={a.due_at} nowDate={t} /></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </TableWrap>
+              <ul className="space-y-3">
+                {data.escalations.map((e, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <Tip label={`Level ${e.level}: sent to ${e.to_role === "regional" ? "regional supervisor" : "administrative authority"}`}>
+                      <span className="mt-1 flex gap-px" aria-hidden>
+                        {[1, 2].map((l) => <span key={l} className={cn("h-3 w-1", l <= e.level ? "bg-late" : "bg-line-2")} />)}
+                      </span>
+                    </Tip>
+                    <Link href={e.link} className="min-w-0 text-sm text-fg-2 hover:text-tea">
+                      <span className="line-clamp-1">{e.entity_label}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             )}
           </Card>
 
-          {!isInstitution ? (
-            <Card title="Stage-wise pendency" description="Open applications per configured stage, with overdue cases highlighted in red.">
-              {data.pendency.length === 0 ? (
-                <EmptyState title="No open applications in your scope" />
-              ) : (
-                <PendencyChart data={data.pendency} />
-              )}
-            </Card>
-          ) : null}
+          <Card title="Activity" description="Recorded actions per day, last 30 days.">
+            <div className="flex h-24 items-end gap-[3px]" role="img" aria-label="Activity over the last 30 days">
+              {data.activity.map((d, i) => (
+                <Tip key={d.day} label={`${new Date(d.day).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}: ${d.n} action${d.n === 1 ? "" : "s"}`} className="h-full flex-1 items-end">
+                  <span
+                    className={cn("block w-full", i === data.activity.length - 1 ? "bg-tea" : d.n ? "bg-lilac/70 hover:bg-lilac" : "bg-line")}
+                    style={{ height: `${Math.max(4, (d.n / maxDay) * 100)}%` }}
+                  />
+                </Tip>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </div>
 
-          <Card title="EVC watch" description="Visits that are waiting to be scheduled or are coming up.">
-            {data.evcUpcoming.length === 0 ? (
-              <EmptyState icon={<CalendarClock className="size-5" aria-hidden />} title="No EVC records in your scope" />
+      {data.regions.length > 1 ? (
+        <Card title="By region">
+          <ul className="grid gap-x-12 gap-y-4 sm:grid-cols-2 xl:grid-cols-3">
+            {data.regions.map((r) => (
+              <li key={r.region}>
+                <div className="flex items-baseline justify-between text-sm">
+                  <span className="text-fg">{r.region}</span>
+                  <span className="tnum font-mono text-xs text-fg-3">{r.open}{r.late ? <span className="text-late"> / {r.late}</span> : null}</span>
+                </div>
+                <Tip label={`${r.region}: ${r.open} open, ${r.late} overdue`} className="mt-2 flex h-1.5 w-full">
+                  <span className="flex h-full w-full bg-line">
+                    <span className="h-full bg-late" style={{ width: `${(r.late / maxRegion) * 100}%` }} />
+                    <span className="h-full bg-sky/70" style={{ width: `${((r.open - r.late) / maxRegion) * 100}%` }} />
+                  </span>
+                </Tip>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      ) : null}
+    </div>
+  );
+}
+
+type Data = Awaited<ReturnType<typeof overviewData>>;
+
+function InstitutionHome({ data, t }: { data: Data; t: Date }) {
+  const k = data.kpis;
+  return (
+    <div className="space-y-14">
+      <section className="relative -mx-4 h-56 overflow-hidden sm:-mx-8 lg:-mx-12">
+        <Image src={campus} alt="Long avenue leading to a historic institution building" fill priority sizes="100vw" className="object-cover object-[50%_40%] grayscale" />
+        <div className="absolute inset-0 bg-grape mix-blend-multiply" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink to-transparent" aria-hidden />
+        <h1 className="absolute bottom-6 left-4 max-w-3xl font-display text-[30px] font-light leading-tight tracking-[-0.02em] text-fg sm:left-8 lg:left-12">
+          {k.open} open{k.queue ? <>, <span className="text-lilac">{k.queue} need your reply</span></> : null}.
+        </h1>
+      </section>
+
+      <div className="grid gap-x-14 gap-y-12 xl:grid-cols-2">
+        <Card title="Applications" actions={<LinkButton href="/applications/new" size="sm">New application</LinkButton>}>
+          <ul className="divide-y divide-line">
+            {data.openApps.length === 0 ? <li className="py-4 text-sm text-fg-3">No open applications.</li> : null}
+            {data.openApps.map((a) => (
+              <li key={a.id}>
+                <Link href={`/applications/${a.id}`} className="group flex items-center justify-between gap-4 py-3.5 hover:bg-ink-2">
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm text-fg group-hover:text-tea">{a.title}</span>
+                    <span className="block text-xs text-fg-3">{a.status === "clarification" ? <span className="text-lilac">Reply needed</span> : a.stage_name}</span>
+                  </span>
+                  <SlaBadge dueAt={a.due_at} nowDate={t} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <div className="space-y-12">
+          <Card title="Undertakings due">
+            {data.undertakingsDue.length === 0 ? (
+              <p className="py-4 text-sm text-fg-3">Nothing due in the next 30 days.</p>
             ) : (
-              <ul className="divide-y divide-slate-100">
-                {data.evcUpcoming.map((e) => {
-                  const when = (e.scheduled_date as Date | null) ?? (e.target_date as Date);
+              <ul className="divide-y divide-line">
+                {data.undertakingsDue.map((u) => (
+                  <li key={u.id}>
+                    <Link href={`/undertakings/${u.id}`} className="group flex items-center justify-between gap-4 py-3.5 hover:bg-ink-2">
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm text-fg group-hover:text-tea">{u.condition}</span>
+                        <span className="block text-xs text-fg-3">{UT_STATUS_LABELS[u.status]}</span>
+                      </span>
+                      <SlaBadge dueAt={u.due_at} nowDate={t} />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Card>
+
+          <Card title="Documents">
+            {data.docsAttention.length === 0 ? (
+              <p className="py-4 text-sm text-fg-3">All documents are valid.</p>
+            ) : (
+              <ul className="space-y-5">
+                {data.docsAttention.map((d) => {
+                  const v = documentValidity(d);
                   return (
-                    <li key={String(e.id)} className="flex flex-wrap items-center justify-between gap-3 py-3">
-                      <div className="min-w-0">
-                        <Link href={`/applications/${e.application_id}?tab=evc`} className="font-medium text-navy hover:text-cobalt hover:underline">
-                          {String(e.title)}
-                        </Link>
-                        <p className="text-xs text-slate-500">{String(e.institution_name)}</p>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Badge tone={e.status === "scheduled" ? "info" : "warning"}>{EVC_STATUS_LABELS[String(e.status)]}</Badge>
-                        <SlaBadge dueAt={when} nowDate={t} />
-                      </div>
+                    <li key={d.id}>
+                      <Link href={`/documents/${d.id}`} className="group block">
+                        <span className="flex items-baseline justify-between gap-3 text-sm">
+                          <span className="truncate text-fg group-hover:text-tea">{d.title}</span>
+                          <span className={cn("shrink-0 font-mono text-xs", v.key === "expired" ? "text-late" : "text-lilac")}>
+                            {v.days === null ? "" : v.days < 0 ? `${Math.abs(v.days)}d ago` : `${v.days}d`}
+                          </span>
+                        </span>
+                        <span className="mt-2 block"><ValidityBar days={v.days} /></span>
+                      </Link>
                     </li>
                   );
                 })}
@@ -145,83 +250,7 @@ export default async function OverviewPage() {
             )}
           </Card>
         </div>
-
-        <div className="space-y-6">
-          <Card
-            title="Open alerts"
-            description="Most urgent first. Overdue items are escalated automatically."
-            actions={<Link href="/alerts" className="text-sm font-medium text-cobalt hover:underline">Open alert centre</Link>}
-          >
-            {data.alerts.length === 0 ? (
-              <EmptyState icon={<CheckCircle2 className="size-5 text-success" aria-hidden />} title="No open alerts" description="Everything in your scope is on track." />
-            ) : (
-              <ul className="space-y-3">
-                {data.alerts.map((al) => (
-                  <li key={String(al.id)} className="rounded-lg border border-slate-200 p-3">
-                    <div className="flex items-start gap-2">
-                      <ShieldAlert className={`mt-0.5 size-4 shrink-0 ${al.threshold_key === "overdue" ? "text-crimson" : "text-amber-text"}`} aria-hidden />
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-navy">{String(al.entity_label)}</p>
-                        <p className="text-xs text-slate-600">{String(al.message)}</p>
-                        <div className="mt-2 flex items-center gap-2">
-                          <Badge tone={al.threshold_key === "overdue" ? "danger" : "warning"}>
-                            {al.threshold_key === "overdue" ? "Overdue" : `Within ${String(al.threshold_key).replace("within-", "")} d`}
-                          </Badge>
-                          <Link href={String(al.link)} className="text-xs font-medium text-cobalt hover:underline">Open record</Link>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Card>
-
-          {!isInstitution ? (
-            <Card title="Recent activity" description="The latest recorded events in your scope.">
-              <ol className="space-y-3">
-                {data.events.map((ev) => (
-                  <li key={String(ev.id)} className="text-sm">
-                    <p className="text-navy">
-                      <Link href={`/applications/${ev.application_id}`} className="font-medium hover:text-cobalt hover:underline">
-                        {String(ev.application_id)}
-                      </Link>{" "}
-                      <span className="text-slate-600">{String(ev.detail ?? ev.type)}</span>
-                    </p>
-                    <p className="text-xs text-slate-500">{String(ev.actor_name ?? "System")} · {new Date(ev.created_at as Date).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}</p>
-                  </li>
-                ))}
-              </ol>
-            </Card>
-          ) : (
-            <Card title="Your undertakings and documents" description="Items that need action from your institution.">
-              <ul className="space-y-3">
-                {data.undertakingsDue.map((u) => (
-                  <li key={u.id} className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <Link href={`/undertakings/${u.id}`} className="block truncate text-sm font-medium text-navy hover:text-cobalt hover:underline">{u.condition}</Link>
-                      <p className="font-mono text-xs text-slate-500">{u.id}</p>
-                    </div>
-                    <SlaBadge dueAt={u.due_at} nowDate={t} />
-                  </li>
-                ))}
-                {data.docsAttention.map((d) => (
-                  <li key={d.id} className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <Link href={`/documents/${d.id}`} className="block truncate text-sm font-medium text-navy hover:text-cobalt hover:underline">{d.title}</Link>
-                      <p className="text-xs text-slate-500">{documentValidity(d).label}</p>
-                    </div>
-                    <FileWarning className="size-4 shrink-0 text-amber-text" aria-hidden />
-                  </li>
-                ))}
-                {data.undertakingsDue.length + data.docsAttention.length === 0 ? (
-                  <EmptyState icon={<ClipboardList className="size-5" aria-hidden />} title="Nothing due in the next 30 days" />
-                ) : null}
-              </ul>
-            </Card>
-          )}
-        </div>
       </div>
-    </>
+    </div>
   );
 }

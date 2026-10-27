@@ -62,8 +62,8 @@ export default async function ReportsPage({
             href={`/reports?report=${r.id}${filters.regionId ? `&region=${filters.regionId}` : ""}${filters.stageRole ? `&stage=${filters.stageRole}` : ""}`}
             aria-current={reportId === r.id ? "page" : undefined}
             className={cn(
-              "whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium ring-1 ring-inset",
-              reportId === r.id ? "bg-navy text-white ring-navy" : "bg-white text-slate-600 ring-slate-300 hover:text-navy",
+              "whitespace-nowrap  px-3 py-1.5 text-sm font-medium ring-inset",
+              reportId === r.id ? "text-tea" : "text-fg-3 hover:text-fg",
             )}
           >
             {r.label}
@@ -74,14 +74,14 @@ export default async function ReportsPage({
       <Card className="mb-6" bodyClassName="px-5 py-4">
         <form method="get" className="flex flex-wrap items-end gap-3" aria-label="Report filters">
           <input type="hidden" name="report" value={reportId} />
-          <label className="flex min-w-[180px] flex-col gap-1 text-sm text-navy">
+          <label className="flex min-w-[180px] flex-col gap-1 text-sm text-fg">
             Region
             <select name="region" defaultValue={sp.region ?? ""} className={selectCls}>
               <option value="">All regions</option>
               {regions.rows.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
             </select>
           </label>
-          <label className="flex min-w-[180px] flex-col gap-1 text-sm text-navy">
+          <label className="flex min-w-[180px] flex-col gap-1 text-sm text-fg">
             Responsible role
             <select name="stage" defaultValue={sp.stage ?? ""} className={selectCls}>
               <option value="">All roles</option>
@@ -89,11 +89,11 @@ export default async function ReportsPage({
             </select>
           </label>
           <button type="submit" className={buttonClass("secondary", "md")}>Apply filters</button>
-          <p className="ml-auto text-sm text-slate-600">
-            <span className="font-medium text-navy">{def.label}</span> · {total} row(s){total ? "" : ""}
+          <p className="ml-auto text-sm text-fg-3">
+            <span className="font-medium text-fg">{def.label}</span> · {total} row(s){total ? "" : ""}
           </p>
         </form>
-        <p className="mt-2 text-xs text-slate-500">{def.description} Figures reflect only the records you are allowed to see.</p>
+        <p className="mt-2 text-xs text-fg-3">{def.description} Figures reflect only the records you are allowed to see.</p>
       </Card>
 
       {reportId === "pendency" && report.rows.length > 0 ? (
@@ -108,14 +108,14 @@ export default async function ReportsPage({
         ) : (
           <TableWrap>
             <table className="w-full min-w-[640px]">
-              <thead className="border-b border-slate-200 bg-canvas">
+              <thead className="border-b border-line bg-transparent">
                 <tr>
                   {report.columns.map((c) => <th key={c} className={th}>{c.replace(/_/g, " ")}</th>)}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-line">
                 {report.rows.map((row, i) => (
-                  <tr key={i} className="hover:bg-slate-50">
+                  <tr key={i} className="hover:bg-ink-2">
                     {report.columns.map((c) => {
                       const v = row[c];
                       const isDate = v instanceof Date;

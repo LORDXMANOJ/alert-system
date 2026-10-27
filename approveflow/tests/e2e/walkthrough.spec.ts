@@ -10,21 +10,22 @@ import path from "node:path";
 const SHOTS = path.resolve(__dirname, "../../../presentation/screenshots");
 const PDF = { name: "evidence.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4\n% demonstration evidence\n%%EOF\n") };
 
-/** Signs in with the demo card that contains `who` (a role label, or an account name such as "Demo user, Vindhya"). */
+/** Signs in with the demo card that contains `who` (a role label, or an account name such as "Kavya Iyer"). */
 async function signIn(page: Page, who: string) {
   await page.goto("/login");
   await page.locator("form").filter({ hasText: who }).first().getByRole("button").first().click();
-  await page.waitForURL((u) => !u.pathname.startsWith("/login"));
+  await page.waitForURL((u) => !/^\/(login|welcome)/.test(u.pathname), { timeout: 15000 });
 }
 
 async function signOut(page: Page) {
-  await page.getByRole("button", { name: "Sign out (demo)" }).click();
+  await page.getByRole("button", { name: "Sign out" }).click();
   await page.waitForURL(/\/login/);
 }
 
 async function shot(page: Page, name: string, mobile = false) {
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 900 });
   await page.waitForLoadState("networkidle");
+  await page.waitForTimeout(900);
   await page.screenshot({ path: path.join(SHOTS, `${name}${mobile ? "-mobile" : ""}.png`), fullPage: false });
 }
 
@@ -35,19 +36,27 @@ test.beforeAll(async ({ browser }) => {
   const page = await browser.newPage();
   await signIn(page, "Administrator");
   await page.goto("/admin/settings");
-  await page.getByRole("button", { name: "Reset demo data" }).click();
+  await page.getByRole("button", { name: "Reset data", exact: true }).click();
   await page.getByRole("alertdialog").getByRole("button", { name: "Reset data" }).click();
-  await expect(page.getByText("Demo data reset to the starting state.")).toBeVisible();
+  await expect(page.getByText("Data reset to the starting state.")).toBeVisible();
   await page.close();
 });
 
 test("Overview and sign-in show role-specific views", async ({ page }) => {
+  await page.goto("/login");
+  await shot(page, "00-sign-in");
+  await page.locator("form").filter({ hasText: "Administrator" }).first().getByRole("button").first().click();
+  await page.waitForURL(/welcome/);
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: path.join(SHOTS, "00-welcome.png") });
+  await page.waitForURL((u) => u.pathname === "/", { timeout: 15000 });
+  await signOut(page);
   await signIn(page, "Administrator");
-  await expect(page.getByRole("heading", { name: /Welcome, Dr\. Asha Verma/ })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("open");
   await shot(page, "01-overview-admin");
   await signOut(page);
   await signIn(page, "Bureau officer");
-  await expect(page.getByRole("heading", { name: "Your queue" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Your desk" })).toBeVisible();
   await shot(page, "02-overview-bureau");
 });
 
@@ -101,7 +110,7 @@ test("Scenario A: scrutiny, EVC queue, scheduling and decision", async ({ page }
 });
 
 test("Scenario B: undertaking evidence, correction and verification", async ({ page }) => {
-  await signIn(page, "Demo user, Vindhya");
+  await signIn(page, "Kavya Iyer");
   await page.goto("/undertakings");
   await page.getByRole("link", { name: /Seminar hall|seminar hall/ }).first().click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/seminar hall/i);
@@ -124,7 +133,7 @@ test("Scenario B: undertaking evidence, correction and verification", async ({ p
   await expect(page.getByText("Corrections requested. The institution has been notified.")).toBeVisible();
   await signOut(page);
 
-  await signIn(page, "Demo user, Vindhya");
+  await signIn(page, "Kavya Iyer");
   await page.goto("/undertakings");
   await page.getByRole("link", { name: /seminar hall/i }).first().click();
   await page.getByRole("form", { name: "Submit evidence" }).locator('input[type="file"]').setInputFiles(PDF);
@@ -147,7 +156,7 @@ test("Scenario B: undertaking evidence, correction and verification", async ({ p
 });
 
 test("Scenario C: lease expiry alert, renewal, review, and history", async ({ page }) => {
-  await signIn(page, "Demo user, Vindhya");
+  await signIn(page, "Kavya Iyer");
   await page.goto("/documents");
   await expect(page.getByText("Expires within 7 days").first()).toBeVisible();
   await shot(page, "09-document-register");
@@ -177,19 +186,19 @@ test("Scenario D: run checks, shift the clock, escalate, and confirm no duplicat
   await signIn(page, "Regional officer");
   await page.goto("/alerts");
   await shot(page, "12-alerts-centre");
-  await page.getByRole("button", { name: "Run monitoring checks" }).click();
+  await page.getByRole("button", { name: "Run checks" }).click();
   await expect(page.getByText(/Checks complete:/)).toBeVisible();
   await signOut(page);
 
   await signIn(page, "Administrator");
   await page.goto("/admin/settings");
   await page.getByRole("button", { name: "+10 days" }).click();
-  await expect(page.getByText("Demo clock moved forward 10 day(s).")).toBeVisible();
+  await expect(page.getByText("Clock moved forward 10 day(s).")).toBeVisible();
   await page.goto("/alerts");
-  await page.getByRole("button", { name: "Run monitoring checks" }).click();
+  await page.getByRole("button", { name: "Run checks" }).click();
   await expect(page.getByText(/Checks complete:.*escalation/)).toBeVisible();
   await shot(page, "13-escalations");
-  await page.getByRole("button", { name: "Run monitoring checks" }).click();
+  await page.getByRole("button", { name: "Run checks" }).click();
   await expect(page.getByText(/Checks complete: 0 new alert\(s\), 0 escalation\(s\)/)).toBeVisible();
   await page.getByRole("heading", { name: "Escalation history" }).scrollIntoViewIfNeeded();
   await shot(page, "14-escalation-history");

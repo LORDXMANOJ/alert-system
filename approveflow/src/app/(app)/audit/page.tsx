@@ -68,7 +68,7 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
         ) : (
           <TableWrap>
             <table className="w-full min-w-[900px]">
-              <thead className="border-b border-slate-200 bg-canvas">
+              <thead className="border-b border-line bg-transparent">
                 <tr>
                   <th className={th}>When</th>
                   <th className={th}>Actor</th>
@@ -78,24 +78,24 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
                   <th className={th}>Details</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-line">
                 {rows.rows.map((r) => (
                   <tr key={r.id} className="align-top">
                     <td className={td}>{fmtDateTime(r.created_at)}</td>
                     <td className={td}>
-                      <p className="text-navy">{r.actor_name ?? r.actor_id}</p>
-                      <p className="text-xs text-slate-500">{r.actor_role}</p>
+                      <p className="text-fg">{r.actor_name ?? r.actor_id}</p>
+                      <p className="text-xs text-fg-3">{r.actor_role}</p>
                     </td>
                     <td className={`${td} font-mono text-xs`}>{r.action}</td>
                     <td className={td}>
                       {r.entity_type}
-                      {r.entity_id ? <p className="font-mono text-xs text-slate-500">{r.entity_id}</p> : null}
+                      {r.entity_id ? <p className="font-mono text-xs text-fg-3">{r.entity_id}</p> : null}
                     </td>
-                    <td className={`${td} max-w-xs text-slate-600`}>{r.reason ?? "—"}</td>
+                    <td className={`${td} max-w-xs text-fg-3`}>{r.reason ?? "—"}</td>
                     <td className={td}>
                       <details>
-                        <summary className="cursor-pointer text-xs font-medium text-cobalt">View JSON</summary>
-                        <pre className="mt-2 max-w-xs overflow-x-auto rounded bg-canvas p-2 text-[11px] text-slate-700">{JSON.stringify(JSON.parse(r.meta || "{}"), null, 2)}</pre>
+                        <summary className="cursor-pointer text-xs font-medium text-tea">View JSON</summary>
+                        <pre className="mt-2 max-w-xs overflow-x-auto bg-transparent p-2 text-[11px] text-fg-2">{JSON.stringify(JSON.parse(r.meta || "{}"), null, 2)}</pre>
                       </details>
                     </td>
                   </tr>

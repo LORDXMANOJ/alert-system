@@ -1,8 +1,10 @@
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { getDb } from "@/server/db";
 import { ROLE_LABELS, type Role } from "@/server/permissions";
 import { loginAction } from "@/app/actions";
-import { buttonClass } from "@/components/ui";
-import { Building2, Gauge, ShieldCheck, Info } from "lucide-react";
+import { LogoMark } from "@/components/logo";
+import corridor from "../../../public/images/corridor.jpg";
 
 export const dynamic = "force-dynamic";
 
@@ -11,77 +13,65 @@ const ORDER: Role[] = ["admin", "regional", "bureau", "evc", "reviewer", "author
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
   const db = await getDb();
-  const users = await db.query<{ id: string; name: string; designation: string; role: Role; institution_name: string | null; region_name: string | null }>(
-    `SELECT u.id, u.name, u.designation, u.role, i.name AS institution_name, r.name AS region_name
+  const users = await db.query<{ id: string; name: string; role: Role; institution_name: string | null; region_name: string | null }>(
+    `SELECT u.id, u.name, u.role, i.name AS institution_name, r.name AS region_name
      FROM users u LEFT JOIN institutions i ON i.id = u.institution_id LEFT JOIN regions r ON r.id = u.region_id
      ORDER BY u.id`,
   );
   const sorted = [...users.rows].sort((a, b) => ORDER.indexOf(a.role) - ORDER.indexOf(b.role));
 
   return (
-    <div className="min-h-screen bg-canvas">
-      <header className="bg-navy text-white">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-5 sm:px-6">
-          <span className="flex size-10 items-center justify-center rounded-lg bg-cobalt">
-            <Gauge className="size-5" aria-hidden />
-          </span>
-          <div>
-            <p className="text-base font-semibold">ApproveFlow AICTE</p>
-            <p className="text-xs text-slate-300">Approval &amp; Compliance Command Centre · SIH26262 prototype</p>
+    <main className="grid min-h-[100dvh] bg-ink lg:grid-cols-[1.05fr_1fr]">
+      <section className="relative hidden overflow-hidden lg:block">
+        <Image src={corridor} alt="Rows of lecture-hall seats in warm light" fill priority sizes="55vw" className="object-cover grayscale" />
+        <div className="absolute inset-0 bg-grape mix-blend-multiply" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" aria-hidden />
+        <div className="absolute inset-x-12 bottom-12">
+          <p className="max-w-md font-display text-[34px] font-light leading-[1.15] tracking-[-0.02em] text-fg">
+            Every approval, every deadline, in one flow.
+          </p>
+        </div>
+      </section>
+
+      <section className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16">
+        <div className="w-full max-w-md">
+          <div className="flex items-center gap-3 text-tea">
+            <LogoMark size={28} />
+            <span className="font-display text-lg text-fg">ApproveFlow</span>
           </div>
+          <h1 className="mt-14 font-display text-[28px] font-light tracking-[-0.02em] text-fg">Sign in</h1>
+          <p className="mt-2 text-sm text-fg-3">Choose your desk.</p>
+
+          {error === "unknown" ? <p role="alert" className="mt-6 text-sm text-late">That account was not found.</p> : null}
+
+          <ul className="mt-8 border-t border-line">
+            {sorted.map((u) => (
+              <li key={u.id} className="border-b border-line">
+                <form action={loginAction}>
+                  <input type="hidden" name="userId" value={u.id} />
+                  <button
+                    type="submit"
+                    aria-label={`Sign in as ${ROLE_LABELS[u.role]}, ${u.name}`}
+                    className="group flex w-full items-center gap-4 py-3.5 text-left transition-colors hover:bg-ink-2 focus-visible:bg-ink-2"
+                  >
+                    <span className="flex size-9 shrink-0 items-center justify-center bg-ink-3 font-display text-[11px] text-fg-2 transition-colors group-hover:bg-grape group-hover:text-fg">
+                      {u.name.replace(/^(Dr|Prof)\.\s*/, "").split(" ").map((p) => p[0]).slice(0, 2).join("")}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm text-fg">{u.name}</span>
+                      <span className="block truncate text-xs text-fg-3">
+                        {ROLE_LABELS[u.role]}
+                        {u.institution_name ? `, ${u.institution_name}` : u.region_name ? `, ${u.region_name}` : ""}
+                      </span>
+                    </span>
+                    <ArrowRight className="size-4 -translate-x-2 text-tea opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100" aria-hidden />
+                  </button>
+                </form>
+              </li>
+            ))}
+          </ul>
         </div>
-      </header>
-
-      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        <div className="max-w-3xl">
-          <h1 className="text-3xl font-semibold tracking-tight text-navy">Choose a demonstration account</h1>
-          <p className="mt-2 text-slate-600">
-            Each card signs you in as a fictional person with one role. Switch roles at any time with the sign-out button, to see
-            the same record from another desk.
-          </p>
-        </div>
-
-        <div className="mt-5 flex gap-3 rounded-xl border border-amber-200 bg-amber-soft p-4 text-sm text-amber-text">
-          <ShieldCheck className="mt-0.5 size-5 shrink-0" aria-hidden />
-          <p>
-            <strong className="font-semibold">Demo authentication.</strong> These accounts are fictional and exist only for this
-            prototype. Production use would need real identity verification and a managed sign-in service.
-          </p>
-        </div>
-
-        {error === "unknown" ? (
-          <p role="alert" className="mt-4 rounded-md bg-crimson-soft px-4 py-3 text-sm text-crimson">That demonstration account was not found.</p>
-        ) : null}
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {sorted.map((u) => (
-            <form key={u.id} action={loginAction} className="flex flex-col rounded-xl border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgb(15_23_42/0.04)] transition-shadow hover:shadow-md">
-              <input type="hidden" name="userId" value={u.id} />
-              <div className="flex items-center gap-2">
-                <span className="rounded-full bg-cobalt-soft px-2.5 py-0.5 text-xs font-medium text-cobalt ring-1 ring-inset ring-blue-200">
-                  {ROLE_LABELS[u.role]}
-                </span>
-              </div>
-              <p className="mt-3 text-base font-semibold text-navy">{u.name}</p>
-              <p className="text-sm text-slate-600">{u.designation}</p>
-              {u.institution_name || u.region_name ? (
-                <p className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
-                  <Building2 className="size-3.5" aria-hidden />
-                  {u.institution_name ?? `${u.region_name} region`}
-                </p>
-              ) : null}
-              <button type="submit" className={buttonClass("primary", "md", "mt-5 w-full")}>
-                Sign in as {ROLE_LABELS[u.role]}
-              </button>
-            </form>
-          ))}
-        </div>
-
-        <p className="mt-8 flex items-start gap-2 text-xs text-slate-500">
-          <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />
-          All institutions, people, applications and documents are fictional demonstration data.
-        </p>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }

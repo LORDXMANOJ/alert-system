@@ -46,23 +46,23 @@ export default async function ScrutinyPage() {
             {clarifications.length === 0 ? (
               <EmptyState title="No clarifications outstanding" />
             ) : (
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-line">
                 {clarifications.slice(0, 8).map((a) => (
                   <li key={a.id} className="py-2.5">
-                    <Link href={`/applications/${a.id}`} className="text-sm font-medium text-navy hover:text-cobalt hover:underline">{a.id}</Link>
-                    <p className="line-clamp-2 text-xs text-slate-500">{a.clarification_reason}</p>
+                    <Link href={`/applications/${a.id}`} className="text-sm font-medium text-fg hover:text-tea hover:underline">{a.id}</Link>
+                    <p className="line-clamp-2 text-xs text-fg-3">{a.clarification_reason}</p>
                   </li>
                 ))}
               </ul>
             )}
           </Card>
           <Card title="Your responsibilities" description={`Signed in as ${ROLE_LABELS[actor.role]}.`}>
-            <ul className="list-disc space-y-2 pl-5 text-sm text-slate-600">
+            <ul className="list-disc space-y-2 pl-5 text-sm text-fg-3">
               <li>Scrutiny confirms the record; it does not approve or reject by itself.</li>
               <li>Missing or discrepant items are returned with a reason that is kept in the history.</li>
               <li>Overdue stages are flagged and escalated automatically. Escalation never decides the case.</li>
             </ul>
-            <p className="mt-3 text-xs text-slate-500">{mine.length} item(s) in your queues.</p>
+            <p className="mt-3 text-xs text-fg-3">{mine.length} item(s) in your queues.</p>
           </Card>
         </div>
       </div>
@@ -78,7 +78,7 @@ function Queue({ title, description, rows, now: t, empty }: { title: string; des
       ) : (
         <TableWrap>
           <table className="w-full min-w-[620px]">
-            <thead className="border-b border-slate-200 bg-canvas">
+            <thead className="border-b border-line bg-transparent">
               <tr>
                 <th className={th}>Application</th>
                 <th className={th}>Institution</th>
@@ -86,12 +86,12 @@ function Queue({ title, description, rows, now: t, empty }: { title: string; des
                 <th className={th}>Deadline</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-line">
               {rows.map((a) => (
-                <tr key={a.id} className={isOverdue(a) ? "bg-crimson-soft/40" : "hover:bg-slate-50"}>
+                <tr key={a.id} className={isOverdue(a) ? "bg-late/5" : "hover:bg-ink-2"}>
                   <td className={td}>
-                    <Link href={`/applications/${a.id}`} className="font-medium text-navy hover:text-cobalt hover:underline">{a.title}</Link>
-                    <p className="font-mono text-xs text-slate-500">{a.id} · {a.stage_name}</p>
+                    <Link href={`/applications/${a.id}`} className="font-medium text-fg hover:text-tea hover:underline">{a.title}</Link>
+                    <p className="font-mono text-xs text-fg-3">{a.id} · {a.stage_name}</p>
                   </td>
                   <td className={td}>{a.institution_name}</td>
                   <td className={td}>

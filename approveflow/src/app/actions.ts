@@ -24,7 +24,7 @@ type Outcome = string | { message: string; href?: string };
 /** Runs a write with the session check, error handling and page refresh that every action needs. */
 async function act(fn: (actor: Actor, db: Db) => Promise<Outcome>): Promise<Result> {
   const actor = await getCurrentActor();
-  if (!actor) return { ok: false, error: "Your demo session has ended. Sign in again." };
+  if (!actor) return { ok: false, error: "Your session has ended. Sign in again." };
   try {
     const db = await getDb();
     const outcome = await fn(actor, db);
@@ -57,7 +57,7 @@ export async function loginAction(fd: FormData): Promise<void> {
   const found = await db.query<{ id: string }>("SELECT id FROM users WHERE id = $1", [userId]);
   if (!found.rows[0]) redirect("/login?error=unknown");
   await setSessionCookie(userId);
-  redirect("/");
+  redirect("/welcome");
 }
 
 export async function logoutAction(): Promise<void> {
@@ -276,13 +276,13 @@ export async function toggleRuleAction(fd: FormData): Promise<Result> {
 export async function shiftClockAction(days: number): Promise<Result> {
   return act(async (actor, db) => {
     await admin.shiftClock(db, actor, days);
-    return `Demo clock moved ${days > 0 ? "forward" : "back"} ${Math.abs(days)} day(s). Run checks to see the effect.`;
+    return `Clock moved ${days > 0 ? "forward" : "back"} ${Math.abs(days)} day(s). Run checks to see the effect.`;
   });
 }
 
 export async function resetDemoAction(): Promise<Result> {
   return act(async (actor, db) => {
     await admin.resetDemo(db, actor);
-    return "Demo data reset to the starting state.";
+    return "Data reset to the starting state.";
   });
 }

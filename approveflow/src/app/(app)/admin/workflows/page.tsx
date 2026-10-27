@@ -34,8 +34,8 @@ export default async function WorkflowConfigPage() {
         title="Workflow configuration"
         description="Each category follows an ordered set of stages. An administrator can change the target duration of a stage. The role that owns a stage and its checklist are fixed in this prototype."
       />
-      <div className="mb-6 rounded-xl border border-amber-200 bg-amber-soft p-4 text-sm text-amber-text">
-        All durations are illustrative defaults. They apply to applications that enter a stage after the change; applications already in progress keep the deadline they were given.
+      <div className="mb-6 border border-line-2 bg-ink-3 p-4 text-sm text-lilac">
+        Durations are configurable. They apply to applications that enter a stage after the change; applications already in progress keep the deadline they were given.
       </div>
       <div className="grid gap-6">
         {[...grouped.entries()].map(([id, g]) => (
@@ -47,7 +47,7 @@ export default async function WorkflowConfigPage() {
           >
             <TableWrap>
               <table className="w-full min-w-[720px]">
-                <thead className="border-b border-slate-200 bg-canvas">
+                <thead className="border-b border-line bg-transparent">
                   <tr>
                     <th className={th}>Stage</th>
                     <th className={th}>Owner role</th>
@@ -55,11 +55,11 @@ export default async function WorkflowConfigPage() {
                     <th className={th}>Target (days)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-line">
                   {g.stages.map((s) => (
                     <tr key={s.stage_id} className="align-middle">
                       <td className={td}>
-                        <span className="font-medium text-navy">{s.position}. {s.stage_name}</span>
+                        <span className="font-medium text-fg">{s.position}. {s.stage_name}</span>
                         <div className="mt-1 flex gap-1">
                           {s.is_evc ? <Badge tone="info">EVC</Badge> : null}
                           {s.is_decision ? <Badge tone="navy">Final decision</Badge> : null}
@@ -82,7 +82,7 @@ export default async function WorkflowConfigPage() {
           </Card>
         ))}
       </div>
-      <p className="mt-4 text-xs text-slate-500">Each save is recorded in the audit trail. Checklists are defined in the seed data.</p>
+      <p className="mt-4 text-xs text-fg-3">Each save is recorded in the audit trail. Checklists are defined in the seed data.</p>
     </>
   );
 }

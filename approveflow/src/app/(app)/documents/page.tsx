@@ -40,7 +40,7 @@ export default async function DocumentsPage() {
           ) : (
             <TableWrap>
               <table className="w-full min-w-[640px]">
-                <thead className="border-b border-slate-200 bg-canvas">
+                <thead className="border-b border-line bg-transparent">
                   <tr>
                     <th className={th}>Document</th>
                     <th className={th}>Institution</th>
@@ -48,12 +48,12 @@ export default async function DocumentsPage() {
                     <th className={th}>Expires</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-line">
                   {docs.map((d) => (
-                    <tr key={d.id} className="hover:bg-slate-50">
+                    <tr key={d.id} className="hover:bg-ink-2">
                       <td className={td}>
-                        <Link href={`/documents/${d.id}`} className="font-medium text-navy hover:text-cobalt hover:underline">{d.title}</Link>
-                        <p className="font-mono text-xs text-slate-500">{d.id} · {d.category}</p>
+                        <Link href={`/documents/${d.id}`} className="font-medium text-fg hover:text-tea hover:underline">{d.title}</Link>
+                        <p className="font-mono text-xs text-fg-3">{d.id} · {d.category}</p>
                       </td>
                       <td className={td}>{d.institution_name}</td>
                       <td className={cn(td, "min-w-[180px]")}>
@@ -85,14 +85,14 @@ export default async function DocumentsPage() {
                   <input id="expiresOn" name="expiresOn" type="date" required className={inputCls} />
                 </Field>
                 <Field label="File" htmlFor="file" hint="PDF, PNG or JPG, up to 10 MB.">
-                  <input id="file" name="file" type="file" required accept="application/pdf,image/png,image/jpeg" className={cn(inputCls, "h-auto py-2 file:mr-3 file:rounded file:border-0 file:bg-cobalt-soft file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-cobalt")} />
+                  <input id="file" name="file" type="file" required accept="application/pdf,image/png,image/jpeg" className={cn(inputCls, "h-auto py-2 file:mr-3 file: file:border-0 file:bg-ink-3 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-tea")} />
                 </Field>
               </div>
             </ServerForm>
           </Card>
         ) : (
           <Card title="About validity">
-            <p className="text-sm text-slate-600">Reminders are sent at 30, 15, 7 and 0 days before expiry (illustrative defaults, configurable). A renewal is verified only after a reviewer accepts it.</p>
+            <p className="text-sm text-fg-3">Reminders are sent at 30, 15, 7 and 0 days before expiry (configurable). A renewal is verified only after a reviewer accepts it.</p>
           </Card>
         )}
       </div>
@@ -101,11 +101,10 @@ export default async function DocumentsPage() {
 }
 
 function Stat({ label, value, tone }: { label: string; value: number; tone: "danger" | "warning" | "info" }) {
-  const accent = { danger: "border-l-crimson", warning: "border-l-amber", info: "border-l-cobalt" }[tone];
   return (
-    <div className={cn("rounded-xl border border-slate-200 border-l-4 bg-white px-4 py-3.5", accent)}>
-      <p className="text-xs text-slate-500">{label}</p>
-      <p className="tnum mt-0.5 text-2xl font-semibold text-navy">{value}</p>
+    <div className="border-t border-line pt-4">
+      <p className={cn("tnum font-display text-[30px] font-light leading-none", ({ neutral: "text-fg", info: "text-sky", warning: "text-lilac", danger: "text-late" } as Record<string, string>)[tone] ?? "text-fg")}>{value}</p>
+      <p className="mt-2 text-[13px] text-fg-3">{label}</p>
     </div>
   );
 }

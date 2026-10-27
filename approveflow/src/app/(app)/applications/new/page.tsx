@@ -29,7 +29,7 @@ export default async function NewApplicationPage() {
       <PageHeader
         crumbs={[{ label: "Applications", href: "/applications" }, { label: "New application" }]}
         title="New application"
-        description="The category decides which configured workflow the application follows. Stage durations are illustrative and can be changed by an administrator."
+        description="The category decides which configured workflow the application follows."
       />
       <div className="grid gap-6 xl:grid-cols-3">
         <Card title="Application details" className="xl:col-span-2">
@@ -68,13 +68,13 @@ export default async function NewApplicationPage() {
               const list = stages.rows.filter((s) => s.template_id === t.id);
               return (
                 <li key={t.id}>
-                  <p className="text-sm font-medium text-navy">{t.category}</p>
-                  <p className="text-xs text-slate-500">{t.name}</p>
-                  <ol className="mt-1.5 space-y-1 text-xs text-slate-600">
+                  <p className="text-sm font-medium text-fg">{t.category}</p>
+                  <p className="text-xs text-fg-3">{t.name}</p>
+                  <ol className="mt-1.5 space-y-1 text-xs text-fg-3">
                     {list.map((s) => (
                       <li key={s.position} className="flex justify-between gap-2">
                         <span>{s.position}. {s.name}{s.is_evc ? " (EVC)" : ""}</span>
-                        <span className="tnum text-slate-400">{s.target_days} d</span>
+                        <span className="tnum text-fg-3">{s.target_days} d</span>
                       </li>
                     ))}
                   </ol>

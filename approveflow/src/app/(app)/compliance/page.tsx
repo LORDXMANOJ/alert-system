@@ -42,12 +42,12 @@ export default async function CompliancePage() {
           {toReview.length === 0 && renewals.length === 0 ? (
             <EmptyState icon={<ListChecks className="size-5" aria-hidden />} title="Nothing waiting for verification" />
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-line">
               {toReview.map((u) => (
                 <li key={u.id} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
-                    <Link href={`/undertakings/${u.id}`} className="block truncate text-sm font-medium text-navy hover:text-cobalt hover:underline">{u.condition}</Link>
-                    <p className="text-xs text-slate-500">{u.institution_name} · undertaking {u.id}</p>
+                    <Link href={`/undertakings/${u.id}`} className="block truncate text-sm font-medium text-fg hover:text-tea hover:underline">{u.condition}</Link>
+                    <p className="text-xs text-fg-3">{u.institution_name} · undertaking {u.id}</p>
                   </div>
                   <Badge tone="info">Undertaking</Badge>
                 </li>
@@ -55,8 +55,8 @@ export default async function CompliancePage() {
               {renewals.map((d) => (
                 <li key={d.id} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
-                    <Link href={`/documents/${d.id}`} className="block truncate text-sm font-medium text-navy hover:text-cobalt hover:underline">{d.title}</Link>
-                    <p className="text-xs text-slate-500">{d.institution_name} · renewal version {d.pending_version_no}</p>
+                    <Link href={`/documents/${d.id}`} className="block truncate text-sm font-medium text-fg hover:text-tea hover:underline">{d.title}</Link>
+                    <p className="text-xs text-fg-3">{d.institution_name} · renewal version {d.pending_version_no}</p>
                   </div>
                   <Badge tone="info">Renewal</Badge>
                 </li>
@@ -69,12 +69,12 @@ export default async function CompliancePage() {
           {corrections.length + overdue.length === 0 ? (
             <EmptyState title="No corrections or overdue undertakings" />
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-line">
               {[...new Map([...overdue, ...corrections].map((u) => [u.id, u])).values()].map((u) => (
                 <li key={u.id} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
-                    <Link href={`/undertakings/${u.id}`} className="block truncate text-sm font-medium text-navy hover:text-cobalt hover:underline">{u.condition}</Link>
-                    <p className={cn("text-xs", u.status === "correction_requested" ? "text-amber-text" : "text-slate-500")}>
+                    <Link href={`/undertakings/${u.id}`} className="block truncate text-sm font-medium text-fg hover:text-tea hover:underline">{u.condition}</Link>
+                    <p className={cn("text-xs", u.status === "correction_requested" ? "text-lilac" : "text-fg-3")}>
                       {UT_STATUS_LABELS[u.status]} · {u.institution_name}
                     </p>
                   </div>
@@ -85,14 +85,14 @@ export default async function CompliancePage() {
           )}
         </Card>
 
-        <Card title="Document validity" description="Based on the verified copy of each document and the demonstration clock." className="xl:col-span-2">
+        <Card title="Document validity" description="Based on the verified copy of each document." className="xl:col-span-2">
           {expiring.length === 0 ? (
             <EmptyState title="No documents expiring within 30 days" />
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-line">
               {expiring.map((d) => (
                 <li key={d.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-                  <Link href={`/documents/${d.id}`} className="font-medium text-navy hover:text-cobalt hover:underline">{d.title}</Link>
+                  <Link href={`/documents/${d.id}`} className="font-medium text-fg hover:text-tea hover:underline">{d.title}</Link>
                   <Badge tone={VALIDITY_TONE[d.validity.key] ?? "neutral"}>{d.validity.label}</Badge>
                 </li>
               ))}
@@ -105,11 +105,10 @@ export default async function CompliancePage() {
 }
 
 function Tile({ label, value, tone = "neutral" }: { label: string; value: number; tone?: "neutral" | "info" | "warning" | "danger" }) {
-  const accent = { neutral: "border-l-slate-300", info: "border-l-cobalt", warning: "border-l-amber", danger: "border-l-crimson" }[tone];
   return (
-    <div className={cn("rounded-xl border border-slate-200 border-l-4 bg-white px-4 py-3.5", accent)}>
-      <p className="text-xs text-slate-500">{label}</p>
-      <p className="tnum mt-0.5 text-2xl font-semibold text-navy">{value}</p>
+    <div className="border-t border-line pt-4">
+      <p className={cn("tnum font-display text-[30px] font-light leading-none", ({ neutral: "text-fg", info: "text-sky", warning: "text-lilac", danger: "text-late" } as Record<string, string>)[tone] ?? "text-fg")}>{value}</p>
+      <p className="mt-2 text-[13px] text-fg-3">{label}</p>
     </div>
   );
 }
