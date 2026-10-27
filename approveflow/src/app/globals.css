@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/* Palette: the five core colours from the project brief, plus supporting tints. */
+@theme inline {
+  --color-navy: #0f172a;
+  --color-navy-2: #1e293b;
+  --color-navy-line: #334155;
+  --color-cobalt: #1d4ed8;
+  --color-cobalt-hover: #2563eb;
+  --color-cobalt-soft: #eff6ff;
+  --color-canvas: #f8fafc;
+  --color-amber: #d97706;
+  --color-amber-text: #b45309;
+  --color-amber-soft: #fffbeb;
+  --color-crimson: #dc2626;
+  --color-crimson-soft: #fef2f2;
+  --color-success: #15803d;
+  --color-success-soft: #f0fdf4;
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-canvas);
+    color: #334155;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-cobalt);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* Reduced motion: keep state changes, drop movement and long transitions. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes af-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(29 78 216 / 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgb(29 78 216 / 0);
+  }
+}
+
+.af-current-stage {
+  animation: af-pulse 2.4s ease-in-out infinite;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
