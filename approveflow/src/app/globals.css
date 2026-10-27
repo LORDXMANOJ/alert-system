@@ -1,67 +1,176 @@
 @import "tailwindcss";
 
-/* Palette: the five core colours from the project brief, plus supporting tints. */
+/*
+ * ApproveFlow visual world: grape-black console, hairline structure, square corners.
+ * Palette from the brief: Tea Green, Pale Sky, Lilac, Dusty Mauve, Grape Soda.
+ * "late" is a brightened Dusty Mauve so overdue work stays legible on the dark ground.
+ */
 @theme inline {
-  --color-navy: #0f172a;
-  --color-navy-2: #1e293b;
-  --color-navy-line: #334155;
-  --color-cobalt: #1d4ed8;
-  --color-cobalt-hover: #2563eb;
-  --color-cobalt-soft: #eff6ff;
-  --color-canvas: #f8fafc;
-  --color-amber: #d97706;
-  --color-amber-text: #b45309;
-  --color-amber-soft: #fffbeb;
-  --color-crimson: #dc2626;
-  --color-crimson-soft: #fef2f2;
-  --color-success: #15803d;
-  --color-success-soft: #f0fdf4;
-  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --color-ink: #0d0a0f;
+  --color-ink-2: #131016;
+  --color-ink-3: #1b161f;
+  --color-line: #2a2330;
+  --color-line-2: #3b3242;
+  --color-fg: #eceeed;
+  --color-fg-2: #c3d2d5;
+  --color-fg-3: #918b9b;
+
+  --color-tea: #c1f7dc;
+  --color-sky: #c3d2d5;
+  --color-lilac: #bda0bc;
+  --color-mauve: #a2708a;
+  --color-grape: #824670;
+  --color-late: #e8789f;
+
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-unbounded), var(--font-schibsted), sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --ease-flow: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
   html {
+    background: var(--color-ink);
+    color-scheme: dark;
     -webkit-text-size-adjust: 100%;
   }
   body {
-    background: var(--color-canvas);
-    color: #334155;
+    background: var(--color-ink);
+    color: var(--color-fg);
     font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
+    caret-color: var(--color-tea);
+  }
+  ::selection {
+    background: var(--color-grape);
+    color: var(--color-fg);
   }
   :focus-visible {
-    outline: 2px solid var(--color-cobalt);
-    outline-offset: 2px;
-    border-radius: 4px;
+    outline: 1px solid var(--color-tea);
+    outline-offset: 3px;
   }
-}
-
-/* Reduced motion: keep state changes, drop movement and long transitions. */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-2) transparent;
   }
-}
-
-@keyframes af-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgb(29 78 216 / 0.35);
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
   }
-  50% {
-    box-shadow: 0 0 0 6px rgb(29 78 216 / 0);
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-2);
   }
-}
-
-.af-current-stage {
-  animation: af-pulse 2.4s ease-in-out infinite;
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  a {
+    text-underline-offset: 4px;
+  }
+  input[type="date"],
+  input[type="datetime-local"] {
+    color-scheme: dark;
+  }
 }
 
 .tnum {
   font-variant-numeric: tabular-nums;
+}
+
+/* Signature motion: content flows in from the left edge, the way work flows through stages. */
+@keyframes af-flow-in {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
+  }
+}
+@keyframes af-sweep {
+  from {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+.af-page {
+  animation: af-flow-in 560ms var(--ease-flow) backwards;
+}
+.af-sweep {
+  transform-origin: left;
+  animation: af-sweep 700ms var(--ease-flow) both;
+}
+@keyframes af-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.af-grow {
+  transform-origin: left;
+  animation: af-grow 900ms var(--ease-flow) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .af-page {
+    animation: none;
+  }
+  .af-sweep,
+  .af-grow {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  aside,
+  header {
+    display: none !important;
+  }
+  body {
+    background: white;
+    color: black;
+  }
+}
+
+/* Logo draws itself after sign-in: the A first, then the tick. */
+@keyframes af-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.af-draw-a,
+.af-draw-tick {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: af-draw 900ms var(--ease-flow) forwards;
+}
+.af-draw-tick {
+  animation-delay: 650ms;
+  animation-duration: 600ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .af-draw-a,
+  .af-draw-tick {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
 }

@@ -28,53 +28,53 @@ export function CommandMenu({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-navy/50 p-4 pt-[12vh]" onMouseDown={(e) => {
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-ink/80 p-4 pt-[12vh]" onMouseDown={(e) => {
       if (e.target === e.currentTarget) onOpenChange(false);
     }}>
       <Command
         label="Command menu"
         loop
-        className="w-full max-w-xl overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-slate-200"
+        className="w-full max-w-xl overflow-hidden bg-ink-2"
         onKeyDown={(e) => {
           if (e.key === "Escape") onOpenChange(false);
         }}
       >
-        <div className="flex items-center gap-2 border-b border-slate-200 px-4">
-          <Search className="size-4 text-slate-400" aria-hidden />
+        <div className="flex items-center gap-2 border-b border-line px-4">
+          <Search className="size-4 text-fg-3" aria-hidden />
           <Command.Input
             autoFocus
             value={query}
             onValueChange={setQuery}
             placeholder="Go to a page, or search applications…"
-            className="h-12 w-full bg-transparent text-sm text-navy outline-none placeholder:text-slate-400"
+            className="h-12 w-full bg-transparent text-sm text-fg outline-none placeholder:text-fg-3"
           />
         </div>
         <Command.List className="max-h-[60vh] overflow-y-auto p-2">
-          <Command.Empty className="px-3 py-6 text-center text-sm text-slate-500">No match. Press Enter to search applications.</Command.Empty>
+          <Command.Empty className="px-3 py-6 text-center text-sm text-fg-3">No match. Press Enter to search applications.</Command.Empty>
           {query.trim() ? (
             <Command.Group heading="Search">
               <Command.Item
                 value={`search ${query}`}
                 onSelect={() => go(`/applications?q=${encodeURIComponent(query.trim())}`)}
-                className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm text-navy data-[selected=true]:bg-cobalt-soft"
+                className="flex cursor-pointer items-center gap-3 px-3 py-2 text-sm text-fg data-[selected=true]:bg-ink-3"
               >
-                <Search className="size-4 text-cobalt" aria-hidden />
+                <Search className="size-4 text-tea" aria-hidden />
                 Search applications for &ldquo;{query.trim()}&rdquo;
-                <CornerDownLeft className="ml-auto size-3.5 text-slate-400" aria-hidden />
+                <CornerDownLeft className="ml-auto size-3.5 text-fg-3" aria-hidden />
               </Command.Item>
             </Command.Group>
           ) : null}
           {nav.map((group) => (
-            <Command.Group key={group.label} heading={group.label} className="mb-1 text-xs text-slate-500">
+            <Command.Group key={group.label} heading={group.label} className="mb-1 text-xs text-fg-3">
               {group.items.map((item) => (
                 <Command.Item
                   key={item.key}
                   value={`${item.label} ${item.key}`}
                   onSelect={() => go(item.href)}
-                  className="flex cursor-pointer items-center justify-between gap-3 rounded-md px-3 py-2 text-sm text-navy data-[selected=true]:bg-cobalt-soft"
+                  className="flex cursor-pointer items-center justify-between gap-3 px-3 py-2 text-sm text-fg data-[selected=true]:bg-ink-3"
                 >
                   <span>{item.label}</span>
-                  {item.shortcut ? <kbd className="rounded border border-slate-300 px-1.5 text-[11px] text-slate-500">{item.shortcut}</kbd> : null}
+                  {item.shortcut ? <kbd className="border border-line-2 px-1.5 text-[11px] text-fg-3">{item.shortcut}</kbd> : null}
                 </Command.Item>
               ))}
             </Command.Group>

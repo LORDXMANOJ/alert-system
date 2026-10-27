@@ -108,7 +108,7 @@ function ConfirmDialog({
 }) {
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-navy/50 p-4 sm:items-center"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-ink/80 p-4 sm:items-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -125,19 +125,19 @@ function ConfirmDialog({
         aria-modal="true"
         aria-labelledby="confirm-title"
         aria-describedby="confirm-body"
-        className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+        className="w-full max-w-md bg-ink-2 p-6"
         initial={{ opacity: 0, y: 12, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 8 }}
         transition={{ duration: 0.18, ease: "easeOut" }}
       >
         <div className="flex items-start gap-3">
-          <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-full", danger ? "bg-crimson-soft text-crimson" : "bg-cobalt-soft text-cobalt")}>
+          <span className={cn("flex size-9 shrink-0 items-center justify-center ", danger ? "bg-late/10 text-late" : "bg-ink-3 text-tea")}>
             <AlertTriangle className="size-5" aria-hidden />
           </span>
           <div>
-            <h2 id="confirm-title" className="text-base font-semibold text-navy">{title}</h2>
-            <p id="confirm-body" className="mt-1 text-sm text-slate-600">{body}</p>
+            <h2 id="confirm-title" className="text-base font-semibold text-fg">{title}</h2>
+            <p id="confirm-body" className="mt-1 text-sm text-fg-3">{body}</p>
           </div>
         </div>
         <div className="mt-6 flex justify-end gap-2">
