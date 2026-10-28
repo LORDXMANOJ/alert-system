@@ -46,7 +46,7 @@ export default async function CompliancePage() {
               {toReview.map((u) => (
                 <li key={u.id} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
-                    <Link href={`/undertakings/${u.id}`} className="block truncate text-sm font-medium text-fg hover:text-tea hover:underline">{u.condition}</Link>
+                    <Link href={`/undertakings/${u.id}`} className="block truncate text-sm font-medium text-fg hover:text-accent hover:underline">{u.condition}</Link>
                     <p className="text-xs text-fg-3">{u.institution_name} · undertaking {u.id}</p>
                   </div>
                   <Badge tone="info">Undertaking</Badge>
@@ -55,7 +55,7 @@ export default async function CompliancePage() {
               {renewals.map((d) => (
                 <li key={d.id} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
-                    <Link href={`/documents/${d.id}`} className="block truncate text-sm font-medium text-fg hover:text-tea hover:underline">{d.title}</Link>
+                    <Link href={`/documents/${d.id}`} className="block truncate text-sm font-medium text-fg hover:text-accent hover:underline">{d.title}</Link>
                     <p className="text-xs text-fg-3">{d.institution_name} · renewal version {d.pending_version_no}</p>
                   </div>
                   <Badge tone="info">Renewal</Badge>
@@ -73,8 +73,8 @@ export default async function CompliancePage() {
               {[...new Map([...overdue, ...corrections].map((u) => [u.id, u])).values()].map((u) => (
                 <li key={u.id} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
-                    <Link href={`/undertakings/${u.id}`} className="block truncate text-sm font-medium text-fg hover:text-tea hover:underline">{u.condition}</Link>
-                    <p className={cn("text-xs", u.status === "correction_requested" ? "text-lilac" : "text-fg-3")}>
+                    <Link href={`/undertakings/${u.id}`} className="block truncate text-sm font-medium text-fg hover:text-accent hover:underline">{u.condition}</Link>
+                    <p className={cn("text-xs", u.status === "correction_requested" ? "text-amber" : "text-fg-3")}>
                       {UT_STATUS_LABELS[u.status]} · {u.institution_name}
                     </p>
                   </div>
@@ -92,7 +92,7 @@ export default async function CompliancePage() {
             <ul className="divide-y divide-line">
               {expiring.map((d) => (
                 <li key={d.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-                  <Link href={`/documents/${d.id}`} className="font-medium text-fg hover:text-tea hover:underline">{d.title}</Link>
+                  <Link href={`/documents/${d.id}`} className="font-medium text-fg hover:text-accent hover:underline">{d.title}</Link>
                   <Badge tone={VALIDITY_TONE[d.validity.key] ?? "neutral"}>{d.validity.label}</Badge>
                 </li>
               ))}
@@ -107,7 +107,7 @@ export default async function CompliancePage() {
 function Tile({ label, value, tone = "neutral" }: { label: string; value: number; tone?: "neutral" | "info" | "warning" | "danger" }) {
   return (
     <div className="border-t border-line pt-4">
-      <p className={cn("tnum font-display text-[30px] font-light leading-none", ({ neutral: "text-fg", info: "text-sky", warning: "text-lilac", danger: "text-late" } as Record<string, string>)[tone] ?? "text-fg")}>{value}</p>
+      <p className={cn("tnum font-display text-[30px] font-light leading-none", ({ neutral: "text-fg", info: "text-sky", warning: "text-amber", danger: "text-late" } as Record<string, string>)[tone] ?? "text-fg")}>{value}</p>
       <p className="mt-2 text-[13px] text-fg-3">{label}</p>
     </div>
   );

@@ -41,7 +41,7 @@ export default async function UndertakingsPage() {
                 {rows.map((u) => (
                   <tr key={u.id} className="hover:bg-ink-2">
                     <td className={td}>
-                      <Link href={`/undertakings/${u.id}`} className="font-medium text-fg hover:text-tea hover:underline">{u.condition}</Link>
+                      <Link href={`/undertakings/${u.id}`} className="font-medium text-fg hover:text-accent hover:underline">{u.condition}</Link>
                       <p className="font-mono text-xs text-fg-3">{u.id} · {u.application_id}</p>
                     </td>
                     <td className={td}>{u.institution_name}</td>

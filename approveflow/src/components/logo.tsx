@@ -12,7 +12,7 @@ export function LogoMark({ size = 22, className, draw = false }: { size?: number
 
 export function Wordmark({ className }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-2.5 text-tea ${className ?? ""}`}>
+    <span className={`inline-flex items-center gap-2.5 text-accent ${className ?? ""}`}>
       <LogoMark size={20} />
       <span className="font-display text-[15px] font-normal tracking-[-0.01em] text-fg">ApproveFlow</span>
     </span>

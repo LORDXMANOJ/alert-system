@@ -95,7 +95,7 @@ export default async function ApplicationDetailPage({
           {decided ? (
             <>Final outcome: <strong className="font-semibold text-fg">{DECISION_LABELS[app.decision ?? ""] ?? app.decision}</strong>. Recorded by the competent authority.</>
           ) : app.status === "clarification" ? (
-            <>Returned for clarification: <span className="text-lilac">{app.clarification_reason}</span></>
+            <>Returned for clarification: <span className="text-amber">{app.clarification_reason}</span></>
           ) : (
             null
           )}
@@ -112,7 +112,7 @@ export default async function ApplicationDetailPage({
                 aria-current={tab === k ? "page" : undefined}
                 className={cn(
                   "-mb-px whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium capitalize transition-colors",
-                  tab === k ? "border-tea text-tea" : "border-transparent text-fg-3 hover:text-fg",
+                  tab === k ? "border-accent text-accent" : "border-transparent text-fg-3 hover:text-fg",
                 )}
               >
                 {k === "undertakings" ? "Undertakings" : k === "evc" ? "EVC" : k}
@@ -146,10 +146,10 @@ export default async function ApplicationDetailPage({
               <ol className="relative space-y-5 border-l-2 border-line pl-6">
                 {events.map((e) => (
                   <li key={e.id} className="relative">
-                    <span className="absolute -left-[31px] top-1 size-3 border-2 border-white bg-tea ring-2" aria-hidden />
+                    <span className="absolute -left-[31px] top-1 size-3 border-2 border-white bg-accent ring-2" aria-hidden />
                     <p className="text-sm font-medium text-fg">{EVENT_LABELS[e.type] ?? e.type}</p>
                     <p className="text-sm text-fg-3">{e.detail}</p>
-                    {e.reason ? <p className="mt-1 bg-ink-3 px-2 py-1 text-xs text-lilac">Reason: {e.reason}</p> : null}
+                    {e.reason ? <p className="mt-1 bg-ink-3 px-2 py-1 text-xs text-amber">Reason: {e.reason}</p> : null}
                     <p className="mt-1 text-xs text-fg-3">
                       {e.actor_name ?? "System"} · {ROLE_LABELS[e.actor_role as keyof typeof ROLE_LABELS] ?? e.actor_role} · {fmtDateTime(e.created_at)}
                     </p>
@@ -217,7 +217,7 @@ export default async function ApplicationDetailPage({
                     {undertakings.map((u) => (
                       <li key={String(u.id)} className="flex flex-wrap items-center justify-between gap-3 py-3">
                         <div className="min-w-0">
-                          <Link href={`/undertakings/${u.id}`} className="font-medium text-fg hover:text-tea hover:underline">{String(u.condition)}</Link>
+                          <Link href={`/undertakings/${u.id}`} className="font-medium text-fg hover:text-accent hover:underline">{String(u.condition)}</Link>
                           <p className="font-mono text-xs text-fg-3">{String(u.id)} · {UT_STATUS_LABELS[String(u.status)]}</p>
                         </div>
                         <SlaBadge dueAt={u.due_at as Date} decided={u.status === "verified"} nowDate={t} />
@@ -256,7 +256,7 @@ export default async function ApplicationDetailPage({
                   {documents.map((d) => (
                     <li key={String(d.id)} className="flex items-center justify-between gap-3 py-3">
                       <div>
-                        <Link href={`/documents/${d.id}`} className="font-medium text-fg hover:text-tea hover:underline">{String(d.title)}</Link>
+                        <Link href={`/documents/${d.id}`} className="font-medium text-fg hover:text-accent hover:underline">{String(d.title)}</Link>
                         <p className="text-xs text-fg-3">{String(d.category)} · {Number(d.version_count)} version(s)</p>
                       </div>
                     </li>
@@ -332,7 +332,7 @@ export default async function ApplicationDetailPage({
                   <legend className="mb-2 text-sm font-medium text-fg">Confirm the checklist</legend>
                   {checklist.map((item, i) => (
                     <label key={item} className="flex items-start gap-2.5 text-sm text-fg-2">
-                      <input type="checkbox" name={`c${i}`} className="mt-0.5 size-4 accent-[#c1f7dc]" />
+                      <input type="checkbox" name={`c${i}`} className="mt-0.5 size-4 accent-[#824670]" />
                       <span>{item}</span>
                     </label>
                   ))}
@@ -362,7 +362,7 @@ export default async function ApplicationDetailPage({
                   <legend className="mb-2 text-sm font-medium text-fg">Outcome</legend>
                   {(["approved", "deferred", "rejected"] as const).map((o) => (
                     <label key={o} className="flex items-center gap-2.5 text-sm text-fg-2">
-                      <input type="radio" name="outcome" value={o} required className="size-4 accent-[#c1f7dc]" /> {DECISION_LABELS[o]}
+                      <input type="radio" name="outcome" value={o} required className="size-4 accent-[#824670]" /> {DECISION_LABELS[o]}
                     </label>
                   ))}
                 </fieldset>
@@ -372,7 +372,7 @@ export default async function ApplicationDetailPage({
                   </Field>
                 </div>
                 <label className="mt-4 flex items-start gap-2.5 text-sm text-fg-2">
-                  <input type="checkbox" name="confirmed" required className="mt-0.5 size-4 accent-[#c1f7dc]" />
+                  <input type="checkbox" name="confirmed" required className="mt-0.5 size-4 accent-[#824670]" />
                   I have reviewed the history, observations and evidence.
                 </label>
               </ServerForm>

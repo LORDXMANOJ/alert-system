@@ -34,11 +34,11 @@ export default async function OverviewPage() {
       {/* Headline as a sentence: the state of the day, numbers coloured by meaning */}
       <section className="flex flex-wrap items-end justify-between gap-6">
         <h1 className="max-w-3xl font-display text-[30px] font-light leading-[1.2] tracking-[-0.02em] text-fg sm:text-[40px]">
-          <Link href="/applications" className="text-fg hover:text-tea">{k.open} open</Link>
+          <Link href="/applications" className="text-fg hover:text-accent">{k.open} open</Link>
           <span className="text-fg-3">, </span>
           <Link href="/applications?overdue=1" className={k.overdue ? "text-late hover:underline" : "text-fg"}>{k.overdue} overdue</Link>
           <span className="text-fg-3">, </span>
-          <Link href="/alerts" className={k.openAlerts ? "text-lilac hover:underline" : "text-fg"}>{k.openAlerts} alerts</Link>
+          <Link href="/alerts" className={k.openAlerts ? "text-amber hover:underline" : "text-fg"}>{k.openAlerts} alerts</Link>
           <span className="text-fg-3">.</span>
         </h1>
         <p className="font-mono text-xs text-fg-3">{t.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</p>
@@ -49,7 +49,7 @@ export default async function OverviewPage() {
         <div className="grid gap-x-1" style={{ gridTemplateColumns: data.flow.map((f) => `${Math.max(f.total / total, 0.12)}fr`).join(" ") }}>
           {data.flow.map((f, i) => (
             <Link key={f.stage} href={`/applications?stage=${STAGE_ROLE_LINK[f.role] ?? ""}`} className="group block min-w-0">
-              <p className="tnum font-display text-[28px] font-light leading-none text-fg transition-colors group-hover:text-tea">{f.total}</p>
+              <p className="tnum font-display text-[28px] font-light leading-none text-fg transition-colors group-hover:text-accent">{f.total}</p>
               <p className="mt-2 truncate text-[13px] text-fg-3 group-hover:text-fg-2">{f.stage}</p>
               <div className="af-grow mt-4 flex h-3 gap-px" style={{ animationDelay: `${i * 90}ms` }}>
                 {([
@@ -78,13 +78,13 @@ export default async function OverviewPage() {
       <div className="grid gap-x-14 gap-y-12 xl:grid-cols-[1.6fr_1fr]">
         <Card
           title={actor.role === "admin" || actor.role === "regional" || actor.role === "auditor" ? "Needs attention" : "Your desk"}
-          actions={<Link href="/applications" className="inline-flex items-center gap-1 text-[13px] text-fg-3 hover:text-tea">All <ArrowUpRight className="size-3.5" /></Link>}
+          actions={<Link href="/applications" className="inline-flex items-center gap-1 text-[13px] text-fg-3 hover:text-accent">All <ArrowUpRight className="size-3.5" /></Link>}
         >
           {data.attention.length === 0 ? (
             <div className="relative h-56 overflow-hidden">
               <Image src={towers} alt="City towers seen through rain on glass" fill sizes="50vw" className="object-cover grayscale" />
               <div className="absolute inset-0 bg-grape/60 mix-blend-multiply" aria-hidden />
-              <p className="absolute bottom-5 left-5 font-display text-xl font-light text-fg">Nothing waiting on your desk.</p>
+              <p className="absolute bottom-5 left-5 font-display text-xl font-light text-ink">Nothing waiting on your desk.</p>
             </div>
           ) : (
             <ul className="divide-y divide-line">
@@ -95,7 +95,7 @@ export default async function OverviewPage() {
                     <Link href={`/applications/${a.id}`} className="group grid grid-cols-[3px_1fr_auto] items-center gap-4 py-3.5 transition-colors hover:bg-ink-2">
                       <span className={cn("h-9", signalBg(a.status === "clarification" ? "wait" : s.signal))} aria-hidden />
                       <span className="min-w-0">
-                        <span className="block truncate text-sm text-fg group-hover:text-tea">{a.title}</span>
+                        <span className="block truncate text-sm text-fg group-hover:text-accent">{a.title}</span>
                         <span className="block truncate text-xs text-fg-3">{a.institution_name} <span className="font-mono">{a.id}</span></span>
                       </span>
                       <span className="flex items-center gap-4 pr-2">
@@ -111,7 +111,7 @@ export default async function OverviewPage() {
         </Card>
 
         <div className="space-y-12">
-          <Card title="Escalated" actions={<Link href="/alerts" className="text-[13px] text-fg-3 hover:text-tea">Open</Link>}>
+          <Card title="Escalated" actions={<Link href="/alerts" className="text-[13px] text-fg-3 hover:text-accent">Open</Link>}>
             {data.escalations.length === 0 ? (
               <p className="py-4 text-sm text-fg-3">No escalations.</p>
             ) : (
@@ -123,7 +123,7 @@ export default async function OverviewPage() {
                         {[1, 2].map((l) => <span key={l} className={cn("h-3 w-1", l <= e.level ? "bg-late" : "bg-line-2")} />)}
                       </span>
                     </Tip>
-                    <Link href={e.link} className="min-w-0 text-sm text-fg-2 hover:text-tea">
+                    <Link href={e.link} className="min-w-0 text-sm text-fg-2 hover:text-accent">
                       <span className="line-clamp-1">{e.entity_label}</span>
                     </Link>
                   </li>
@@ -137,7 +137,7 @@ export default async function OverviewPage() {
               {data.activity.map((d, i) => (
                 <Tip key={d.day} label={`${new Date(d.day).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}: ${d.n} action${d.n === 1 ? "" : "s"}`} className="h-full flex-1 items-end">
                   <span
-                    className={cn("block w-full", i === data.activity.length - 1 ? "bg-tea" : d.n ? "bg-lilac/70 hover:bg-lilac" : "bg-line")}
+                    className={cn("block w-full", i === data.activity.length - 1 ? "bg-accent" : d.n ? "bg-amber/70 hover:bg-amber" : "bg-line")}
                     style={{ height: `${Math.max(4, (d.n / maxDay) * 100)}%` }}
                   />
                 </Tip>
@@ -182,7 +182,7 @@ function InstitutionHome({ data, t }: { data: Data; t: Date }) {
         <div className="absolute inset-0 bg-grape mix-blend-multiply" aria-hidden />
         <div className="absolute inset-0 bg-gradient-to-t from-ink to-transparent" aria-hidden />
         <h1 className="absolute bottom-6 left-4 max-w-3xl font-display text-[30px] font-light leading-tight tracking-[-0.02em] text-fg sm:left-8 lg:left-12">
-          {k.open} open{k.queue ? <>, <span className="text-lilac">{k.queue} need your reply</span></> : null}.
+          {k.open} open{k.queue ? <>, <span className="text-amber">{k.queue} need your reply</span></> : null}.
         </h1>
       </section>
 
@@ -194,8 +194,8 @@ function InstitutionHome({ data, t }: { data: Data; t: Date }) {
               <li key={a.id}>
                 <Link href={`/applications/${a.id}`} className="group flex items-center justify-between gap-4 py-3.5 hover:bg-ink-2">
                   <span className="min-w-0">
-                    <span className="block truncate text-sm text-fg group-hover:text-tea">{a.title}</span>
-                    <span className="block text-xs text-fg-3">{a.status === "clarification" ? <span className="text-lilac">Reply needed</span> : a.stage_name}</span>
+                    <span className="block truncate text-sm text-fg group-hover:text-accent">{a.title}</span>
+                    <span className="block text-xs text-fg-3">{a.status === "clarification" ? <span className="text-amber">Reply needed</span> : a.stage_name}</span>
                   </span>
                   <SlaBadge dueAt={a.due_at} nowDate={t} />
                 </Link>
@@ -214,7 +214,7 @@ function InstitutionHome({ data, t }: { data: Data; t: Date }) {
                   <li key={u.id}>
                     <Link href={`/undertakings/${u.id}`} className="group flex items-center justify-between gap-4 py-3.5 hover:bg-ink-2">
                       <span className="min-w-0">
-                        <span className="block truncate text-sm text-fg group-hover:text-tea">{u.condition}</span>
+                        <span className="block truncate text-sm text-fg group-hover:text-accent">{u.condition}</span>
                         <span className="block text-xs text-fg-3">{UT_STATUS_LABELS[u.status]}</span>
                       </span>
                       <SlaBadge dueAt={u.due_at} nowDate={t} />
@@ -236,8 +236,8 @@ function InstitutionHome({ data, t }: { data: Data; t: Date }) {
                     <li key={d.id}>
                       <Link href={`/documents/${d.id}`} className="group block">
                         <span className="flex items-baseline justify-between gap-3 text-sm">
-                          <span className="truncate text-fg group-hover:text-tea">{d.title}</span>
-                          <span className={cn("shrink-0 font-mono text-xs", v.key === "expired" ? "text-late" : "text-lilac")}>
+                          <span className="truncate text-fg group-hover:text-accent">{d.title}</span>
+                          <span className={cn("shrink-0 font-mono text-xs", v.key === "expired" ? "text-late" : "text-amber")}>
                             {v.days === null ? "" : v.days < 0 ? `${Math.abs(v.days)}d ago` : `${v.days}d`}
                           </span>
                         </span>

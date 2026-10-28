@@ -62,10 +62,10 @@ export default async function UndertakingDetailPage({ params }: { params: Promis
                     </div>
                     <p className="mt-1 text-sm text-fg-2">{String(s.note)}</p>
                     <p className="mt-2 text-xs text-fg-3">
-                      File: <a href={`/api/files/${s.file_id}`} className="font-medium text-tea hover:underline">{String(s.file_name)}</a> · submitted {fmtDateTime(s.submitted_at as Date)}
+                      File: <a href={`/api/files/${s.file_id}`} className="font-medium text-accent hover:underline">{String(s.file_name)}</a> · submitted {fmtDateTime(s.submitted_at as Date)}
                     </p>
                     {s.remarks ? (
-                      <p className={cn("mt-3  px-3 py-2 text-sm", s.review_status === "accepted" ? "bg-tea/10 text-tea" : "bg-ink-3 text-lilac")}>
+                      <p className={cn("mt-3  px-3 py-2 text-sm", s.review_status === "accepted" ? "bg-accent/10 text-accent" : "bg-ink-3 text-amber")}>
                         Reviewer ({String(s.reviewer_name ?? "—")}): {String(s.remarks)}
                       </p>
                     ) : null}
@@ -81,8 +81,8 @@ export default async function UndertakingDetailPage({ params }: { params: Promis
                 <input type="hidden" name="undertakingId" value={ut.id} />
                 <fieldset className="mb-4 flex flex-col gap-2 sm:flex-row sm:gap-6">
                   <legend className="sr-only">Outcome</legend>
-                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="accepted" required className="size-4 accent-[#c1f7dc]" /> Accept evidence and verify</label>
-                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="correction_requested" className="size-4 accent-[#c1f7dc]" /> Request corrections</label>
+                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="accepted" required className="size-4 accent-[#824670]" /> Accept evidence and verify</label>
+                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="correction_requested" className="size-4 accent-[#824670]" /> Request corrections</label>
                 </fieldset>
                 <Field label="Remarks" htmlFor="remarks" hint="Required when requesting corrections (at least 10 characters).">
                   <textarea id="remarks" name="remarks" className={textareaCls} />
@@ -109,7 +109,7 @@ export default async function UndertakingDetailPage({ params }: { params: Promis
               <ServerForm action={submitEvidenceAction} submit="Submit evidence" ariaLabel="Submit evidence">
                 <input type="hidden" name="undertakingId" value={ut.id} />
                 <Field label="Evidence file" htmlFor="file">
-                  <input id="file" name="file" type="file" required accept="application/pdf,image/png,image/jpeg" className={cn(inputCls, "h-auto py-2 file:mr-3 file: file:border-0 file:bg-ink-3 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-tea")} />
+                  <input id="file" name="file" type="file" required accept="application/pdf,image/png,image/jpeg" className={cn(inputCls, "h-auto py-2 file:mr-3 file: file:border-0 file:bg-ink-3 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-accent")} />
                 </Field>
                 <div className="mt-4">
                   <Field label="Note for the reviewer" htmlFor="note">
@@ -120,7 +120,7 @@ export default async function UndertakingDetailPage({ params }: { params: Promis
             </Card>
           ) : null}
 
-          <Link href="/undertakings" className="block text-sm font-medium text-tea hover:underline">Back to undertakings</Link>
+          <Link href="/undertakings" className="block text-sm font-medium text-accent hover:underline">Back to undertakings</Link>
         </aside>
       </div>
     </>

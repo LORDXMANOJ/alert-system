@@ -26,7 +26,7 @@ export default async function UsersPage() {
         title="Users & permissions"
         description="Assign the staff roles used in this prototype. Institution and regional users keep their scope. You cannot change your own role, and every change is recorded."
       />
-      <div className="mb-6 border border-line-2 bg-ink-3 p-4 text-sm text-lilac">
+      <div className="mb-6 border border-line-2 bg-ink-3 p-4 text-sm text-amber">
         Roles are proposed for the prototype and are not official AICTE designations. Confirm real responsibilities before any production use.
       </div>
       <Card bodyClassName="px-0 py-0" title="Accounts">

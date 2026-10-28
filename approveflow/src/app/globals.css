@@ -1,26 +1,29 @@
 @import "tailwindcss";
 
 /*
- * ApproveFlow visual world: grape-black console, hairline structure, square corners.
- * Palette from the brief: Tea Green, Pale Sky, Lilac, Dusty Mauve, Grape Soda.
- * "late" is a brightened Dusty Mauve so overdue work stays legible on the dark ground.
+ * ApproveFlow visual world: Tea Green ground, dark-grape type, hairline structure, square corners.
+ * Palette: Tea Green (page), Pale Sky, Lilac, Dusty Mauve, Grape Soda. The lightest colour is the
+ * background; the darker palette colours carry text, actions and structure. Status colours are
+ * tuned to stay readable on the light ground: ok (green), amber (soon), late (crimson), sky (waiting).
  */
 @theme inline {
-  --color-ink: #0d0a0f;
-  --color-ink-2: #131016;
-  --color-ink-3: #1b161f;
-  --color-line: #2a2330;
-  --color-line-2: #3b3242;
-  --color-fg: #eceeed;
-  --color-fg-2: #c3d2d5;
-  --color-fg-3: #918b9b;
+  --color-ink: #c1f7dc;
+  --color-ink-2: #d6fae8;
+  --color-ink-3: #aee8c8;
+  --color-line: #9fd8ba;
+  --color-line-2: #4f8f70;
+  --color-fg: #2b1226;
+  --color-fg-2: #4d2a45;
+  --color-fg-3: #67505f;
 
-  --color-tea: #c1f7dc;
-  --color-sky: #c3d2d5;
-  --color-lilac: #bda0bc;
+  --color-accent: #824670;
+  --color-accent-hover: #6b3a5c;
+  --color-sky: #3f6b77;
   --color-mauve: #a2708a;
   --color-grape: #824670;
-  --color-late: #e8789f;
+  --color-ok: #1f7a53;
+  --color-amber: #a8650f;
+  --color-late: #b8244f;
 
   --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-unbounded), var(--font-schibsted), sans-serif;
@@ -32,7 +35,7 @@
 @layer base {
   html {
     background: var(--color-ink);
-    color-scheme: dark;
+    color-scheme: light;
     -webkit-text-size-adjust: 100%;
   }
   body {
@@ -41,14 +44,14 @@
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
-    caret-color: var(--color-tea);
+    caret-color: var(--color-accent);
   }
   ::selection {
-    background: var(--color-grape);
-    color: var(--color-fg);
+    background: var(--color-accent);
+    color: var(--color-ink);
   }
   :focus-visible {
-    outline: 1px solid var(--color-tea);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
   }
   * {
@@ -70,7 +73,7 @@
   }
   input[type="date"],
   input[type="datetime-local"] {
-    color-scheme: dark;
+    color-scheme: light;
   }
 }
 

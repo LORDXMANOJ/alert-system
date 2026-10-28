@@ -68,7 +68,7 @@ export default async function WorkflowPage() {
                         </td>
                         <td className={td}>{ROLE_LABELS[s.role]}</td>
                         <td className={td}>
-                          <Link href={`/applications?stage=${s.role}`} className="tnum font-medium text-tea hover:underline">{s.open_count}</Link>
+                          <Link href={`/applications?stage=${s.role}`} className="tnum font-medium text-accent hover:underline">{s.open_count}</Link>
                         </td>
                         <td className={td}>
                           {s.overdue_count > 0 ? <Badge tone="danger">{s.overdue_count}</Badge> : <span className="tnum text-fg-3">0</span>}

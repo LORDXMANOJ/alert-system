@@ -102,7 +102,7 @@ export function AppShell({
 
   const sidebar = (
     <nav aria-label="Main navigation" className="flex h-full flex-col">
-      <Link href="/" className={cn("flex h-16 items-center gap-3 px-5 text-tea", collapsed && "justify-center px-0")} onClick={() => setMobileOpen(false)}>
+      <Link href="/" className={cn("flex h-16 items-center gap-3 px-5 text-accent", collapsed && "justify-center px-0")} onClick={() => setMobileOpen(false)}>
         <LogoMark size={22} />
         {!collapsed ? <span className="font-display text-[15px] tracking-[-0.01em] text-fg">ApproveFlow</span> : null}
       </Link>
@@ -131,13 +131,13 @@ export function AppShell({
                     >
                       {active ? (
                         <motion.span layoutId="nav-active" className="absolute inset-0 bg-ink-3" transition={{ type: "spring", bounce: 0, duration: 0.35 }} aria-hidden>
-                          <span className="absolute inset-y-0 left-0 w-px bg-tea" />
+                          <span className="absolute inset-y-0 left-0 w-px bg-accent" />
                         </motion.span>
                       ) : null}
-                      <Icon className={cn("relative size-[17px] shrink-0", active && "text-tea")} strokeWidth={1.6} aria-hidden />
+                      <Icon className={cn("relative size-[17px] shrink-0", active && "text-accent")} strokeWidth={1.6} aria-hidden />
                       {!collapsed ? <span className="relative truncate">{item.label}</span> : null}
                       {count > 0 && !collapsed ? (
-                        <span className={cn("tnum relative ml-auto font-mono text-[11px]", item.key === "tasks" ? "text-late" : "text-tea")}>{count}</span>
+                        <span className={cn("tnum relative ml-auto font-mono text-[11px]", item.key === "tasks" ? "text-late" : "text-accent")}>{count}</span>
                       ) : null}
                       {count > 0 && collapsed ? <span className="absolute right-2 top-2 size-1.5 bg-late" aria-hidden /> : null}
                     </Link>
@@ -171,7 +171,7 @@ export function AppShell({
       <AnimatePresence>
         {mobileOpen ? (
           <motion.div className="fixed inset-0 z-40 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <button type="button" aria-label="Close navigation" className="absolute inset-0 bg-ink/70" onClick={() => setMobileOpen(false)} />
+            <button type="button" aria-label="Close navigation" className="absolute inset-0 bg-fg/40" onClick={() => setMobileOpen(false)} />
             <motion.div
               className="absolute inset-y-0 left-0 w-72 border-r border-line bg-ink-2"
               initial={{ x: "-100%" }}
@@ -211,7 +211,7 @@ export function AppShell({
             </Link>
             <Tip label={`${actor.name}, ${actor.designation}`}>
               <span className="flex items-center gap-3">
-                <span className="flex size-8 items-center justify-center bg-grape font-display text-[11px] text-fg" aria-hidden>{initials}</span>
+                <span className="flex size-8 items-center justify-center bg-accent font-display text-[11px] text-ink" aria-hidden>{initials}</span>
                 <span className="hidden text-left leading-tight md:block">
                   <span className="block text-[13px] text-fg">{actor.name}</span>
                   <span className="block text-[11px] text-fg-3">{actor.roleLabel}</span>

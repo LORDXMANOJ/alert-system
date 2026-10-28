@@ -34,7 +34,7 @@ export default async function WorkflowConfigPage() {
         title="Workflow configuration"
         description="Each category follows an ordered set of stages. An administrator can change the target duration of a stage. The role that owns a stage and its checklist are fixed in this prototype."
       />
-      <div className="mb-6 border border-line-2 bg-ink-3 p-4 text-sm text-lilac">
+      <div className="mb-6 border border-line-2 bg-ink-3 p-4 text-sm text-amber">
         Durations are configurable. They apply to applications that enter a stage after the change; applications already in progress keep the deadline they were given.
       </div>
       <div className="grid gap-6">

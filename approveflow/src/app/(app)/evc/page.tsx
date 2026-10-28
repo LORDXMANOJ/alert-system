@@ -37,7 +37,7 @@ export default async function EvcPage({ searchParams }: { searchParams: Promise<
                 key={v}
                 href={`/evc?view=${v}`}
                 aria-current={view === v ? "page" : undefined}
-                className={cn(" px-3 py-1.5 font-medium capitalize", view === v ? "bg-tea text-ink" : "text-fg-3 hover:text-fg")}
+                className={cn(" px-3 py-1.5 font-medium capitalize", view === v ? "bg-accent text-ink" : "text-fg-3 hover:text-fg")}
               >
                 {v}
               </Link>
@@ -109,7 +109,7 @@ export default async function EvcPage({ searchParams }: { searchParams: Promise<
                 {rows.map((r) => (
                   <tr key={r.id} className="hover:bg-ink-2">
                     <td className={td}>
-                      <Link href={`/applications/${r.application_id}?tab=evc`} className="font-medium text-fg hover:text-tea hover:underline">{r.application_title}</Link>
+                      <Link href={`/applications/${r.application_id}?tab=evc`} className="font-medium text-fg hover:text-accent hover:underline">{r.application_title}</Link>
                       <p className="font-mono text-xs text-fg-3">{r.application_id}</p>
                     </td>
                     <td className={td}>{r.institution_name}{r.institution_is_new ? <Badge tone="info" className="ml-2">New</Badge> : null}</td>
@@ -131,7 +131,7 @@ export default async function EvcPage({ searchParams }: { searchParams: Promise<
 function Stat({ label, value, tone = "neutral" }: { label: string; value: number; tone?: "neutral" | "info" | "warning" | "danger" }) {
   return (
     <div className="border-t border-line pt-4">
-      <p className={cn("tnum font-display text-[30px] font-light leading-none", ({ neutral: "text-fg", info: "text-sky", warning: "text-lilac", danger: "text-late" } as Record<string, string>)[tone] ?? "text-fg")}>{value}</p>
+      <p className={cn("tnum font-display text-[30px] font-light leading-none", ({ neutral: "text-fg", info: "text-sky", warning: "text-amber", danger: "text-late" } as Record<string, string>)[tone] ?? "text-fg")}>{value}</p>
       <p className="mt-2 text-[13px] text-fg-3">{label}</p>
     </div>
   );
@@ -191,7 +191,7 @@ function CalendarView({ rows, now: t, monthParam }: { rows: Row[]; now: Date; mo
             <div key={i} className={cn("min-h-24 bg-ink-2 p-1.5", !day && "bg-ink-2")}>
               {day ? (
                 <>
-                  <p className={cn("tnum mb-1 inline-flex size-6 items-center justify-center  font-medium", isToday ? "bg-tea text-ink" : "text-fg-3")}>{day}</p>
+                  <p className={cn("tnum mb-1 inline-flex size-6 items-center justify-center  font-medium", isToday ? "bg-accent text-ink" : "text-fg-3")}>{day}</p>
                   <ul className="space-y-1">
                     {items.map((r) => (
                       <li key={r.id}>
@@ -199,7 +199,7 @@ function CalendarView({ rows, now: t, monthParam }: { rows: Row[]; now: Date; mo
                           href={`/applications/${r.application_id}?tab=evc`}
                           className={cn(
                             "block truncate  px-1.5 py-0.5 text-[11px] font-medium ring-inset",
-                            r.status === "scheduled" ? "bg-ink-3 text-tea" : "bg-ink-3 text-lilac",
+                            r.status === "scheduled" ? "bg-ink-3 text-accent" : "bg-ink-3 text-amber",
                           )}
                           title={`${r.application_title} · ${EVC_STATUS_LABELS[r.status]}`}
                         >

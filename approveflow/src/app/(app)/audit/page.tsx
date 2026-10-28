@@ -94,7 +94,7 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
                     <td className={`${td} max-w-xs text-fg-3`}>{r.reason ?? "—"}</td>
                     <td className={td}>
                       <details>
-                        <summary className="cursor-pointer text-xs font-medium text-tea">View JSON</summary>
+                        <summary className="cursor-pointer text-xs font-medium text-accent">View JSON</summary>
                         <pre className="mt-2 max-w-xs overflow-x-auto bg-transparent p-2 text-[11px] text-fg-2">{JSON.stringify(JSON.parse(r.meta || "{}"), null, 2)}</pre>
                       </details>
                     </td>

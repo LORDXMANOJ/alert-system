@@ -17,10 +17,10 @@ export function buttonClass(variant: ButtonVariant = "primary", size: "sm" | "md
     "transition-[background-color,border-color,color,transform] duration-150 active:scale-[0.98]",
     "disabled:pointer-events-none disabled:opacity-40",
     size === "sm" ? "h-8 px-3 text-[13px]" : "h-10 px-4 text-sm",
-    variant === "primary" && "bg-tea text-ink hover:bg-[#d9fbe9]",
+    variant === "primary" && "bg-accent text-ink hover:bg-accent-hover",
     variant === "secondary" && "border border-line-2 text-fg hover:border-fg-3 hover:bg-ink-3",
-    variant === "danger" && "bg-late text-ink hover:bg-[#f093b4]",
-    variant === "ghost" && "px-0 text-tea hover:underline",
+    variant === "danger" && "bg-late text-ink hover:bg-[#9b1d42]",
+    variant === "ghost" && "px-0 text-accent hover:underline",
     extra,
   );
 }
@@ -48,7 +48,7 @@ export function LinkButton({
 /* ---------- Form controls ---------- */
 
 const control =
-  "w-full border border-line-2 bg-ink-2 text-sm text-fg placeholder:text-fg-3 transition-colors focus:border-tea focus:outline-none disabled:opacity-50";
+  "w-full border border-line-2 bg-ink-2 text-sm text-fg placeholder:text-fg-3 transition-colors focus:border-accent focus:outline-none disabled:opacity-50";
 export const inputCls = `h-10 px-3 ${control}`;
 export const textareaCls = `min-h-24 px-3 py-2 ${control}`;
 export const selectCls = inputCls;
@@ -144,7 +144,7 @@ export function PageHeader({
             <span key={`${c.label}-${i}`} className="inline-flex items-center gap-2">
               {i > 0 ? <span aria-hidden>/</span> : null}
               {c.href ? (
-                <Link href={c.href} className="hover:text-tea">
+                <Link href={c.href} className="hover:text-accent">
                   {c.label}
                 </Link>
               ) : (
@@ -194,19 +194,19 @@ export type Tone = "neutral" | "info" | "success" | "warning" | "danger" | "navy
 export type Signal = "ok" | "wait" | "soon" | "late" | "done" | "none";
 
 const SIGNAL_BG: Record<Signal, string> = {
-  ok: "bg-tea",
+  ok: "bg-ok",
   wait: "bg-sky",
-  soon: "bg-lilac",
+  soon: "bg-amber",
   late: "bg-late",
   done: "bg-grape",
   none: "bg-line-2",
 };
 const SIGNAL_TEXT: Record<Signal, string> = {
-  ok: "text-tea",
+  ok: "text-ok",
   wait: "text-sky",
-  soon: "text-lilac",
+  soon: "text-amber",
   late: "text-late",
-  done: "text-mauve",
+  done: "text-accent",
   none: "text-fg-3",
 };
 const TONE_TO_SIGNAL: Record<Tone, Signal> = {
@@ -303,16 +303,16 @@ export function StageStepper({
                 <span
                   className={cn(
                     "flex size-4 items-center justify-center border",
-                    done && "border-tea bg-tea",
-                    current && !returned && "border-tea",
-                    current && returned && "border-lilac",
+                    done && "border-accent bg-accent",
+                    current && !returned && "border-accent",
+                    current && returned && "border-amber",
                     !done && !current && "border-line-2",
                   )}
                 >
-                  {current ? <span className={cn("size-1.5", returned ? "bg-lilac" : "bg-tea")} /> : null}
+                  {current ? <span className={cn("size-1.5", returned ? "bg-amber" : "bg-accent")} /> : null}
                 </span>
               </Tip>
-              {idx < stages.length - 1 ? <span className={cn("h-px flex-1", done ? "bg-tea" : "bg-line-2")} aria-hidden /> : null}
+              {idx < stages.length - 1 ? <span className={cn("h-px flex-1", done ? "bg-accent" : "bg-line-2")} aria-hidden /> : null}
             </div>
             <p className={cn("pr-3 text-[13px] leading-tight", current ? "font-semibold text-fg" : done ? "text-fg-2" : "text-fg-3")}>{s.name}</p>
           </li>
@@ -326,7 +326,7 @@ export function StageStepper({
 export function ValidityBar({ days }: { days: number | null }) {
   if (days === null) return <div className="h-[3px] w-full bg-line-2" aria-hidden />;
   const pct = Math.max(0, Math.min(100, (days / 365) * 100));
-  const tone = days < 0 ? "bg-late" : days <= 30 ? "bg-lilac" : "bg-tea";
+  const tone = days < 0 ? "bg-late" : days <= 30 ? "bg-amber" : "bg-ok";
   return (
     <div className="h-[3px] w-full bg-line-2" role="img" aria-label={days < 0 ? "Expired" : `${days} days remaining`}>
       <div className={cn("h-full", tone)} style={{ width: `${days < 0 ? 100 : pct}%` }} />
@@ -348,7 +348,7 @@ export function Kpi({
   tone?: "neutral" | "danger" | "warning" | "info";
   hint?: string;
 }) {
-  const color = { neutral: "text-fg", danger: "text-late", warning: "text-lilac", info: "text-tea" }[tone];
+  const color = { neutral: "text-fg", danger: "text-late", warning: "text-amber", info: "text-accent" }[tone];
   const body = (
     <div className="group py-1">
       <p className={cn("tnum font-display text-[34px] font-light leading-none tracking-[-0.03em]", color)}>{value}</p>

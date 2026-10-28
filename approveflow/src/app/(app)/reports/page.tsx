@@ -63,7 +63,7 @@ export default async function ReportsPage({
             aria-current={reportId === r.id ? "page" : undefined}
             className={cn(
               "whitespace-nowrap  px-3 py-1.5 text-sm font-medium ring-inset",
-              reportId === r.id ? "text-tea" : "text-fg-3 hover:text-fg",
+              reportId === r.id ? "text-accent" : "text-fg-3 hover:text-fg",
             )}
           >
             {r.label}

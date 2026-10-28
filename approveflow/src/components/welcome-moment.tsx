@@ -29,7 +29,7 @@ export function WelcomeMoment({ greeting, role }: { greeting: string; role: stri
       aria-live="polite"
     >
       <div>
-        <span className="text-tea">
+        <span className="text-accent">
           <LogoMark size={72} draw />
         </span>
         <motion.p
@@ -48,7 +48,7 @@ export function WelcomeMoment({ greeting, role }: { greeting: string; role: stri
         >
           {role}
         </motion.p>
-        <div className="af-grow mt-8 h-px w-[min(420px,70vw)] bg-tea" style={{ animationDelay: "700ms" }} aria-hidden />
+        <div className="af-grow mt-8 h-px w-[min(420px,70vw)] bg-accent" style={{ animationDelay: "700ms" }} aria-hidden />
       </div>
     </motion.main>
   );

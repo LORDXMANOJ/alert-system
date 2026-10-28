@@ -28,13 +28,13 @@ export function CommandMenu({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-ink/80 p-4 pt-[12vh]" onMouseDown={(e) => {
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-fg/40 p-4 pt-[12vh]" onMouseDown={(e) => {
       if (e.target === e.currentTarget) onOpenChange(false);
     }}>
       <Command
         label="Command menu"
         loop
-        className="w-full max-w-xl overflow-hidden bg-ink-2"
+        className="w-full max-w-xl overflow-hidden border border-line-2 bg-ink-2"
         onKeyDown={(e) => {
           if (e.key === "Escape") onOpenChange(false);
         }}
@@ -58,7 +58,7 @@ export function CommandMenu({
                 onSelect={() => go(`/applications?q=${encodeURIComponent(query.trim())}`)}
                 className="flex cursor-pointer items-center gap-3 px-3 py-2 text-sm text-fg data-[selected=true]:bg-ink-3"
               >
-                <Search className="size-4 text-tea" aria-hidden />
+                <Search className="size-4 text-accent" aria-hidden />
                 Search applications for &ldquo;{query.trim()}&rdquo;
                 <CornerDownLeft className="ml-auto size-3.5 text-fg-3" aria-hidden />
               </Command.Item>

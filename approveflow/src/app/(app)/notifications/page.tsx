@@ -37,7 +37,7 @@ export default async function NotificationsPage({ searchParams }: { searchParams
                 key={f.key}
                 href={`/notifications?filter=${f.key}`}
                 aria-current={filter === f.key ? "page" : undefined}
-                className={cn(" px-3 py-1 text-sm font-medium ring-inset", filter === f.key ? "text-tea" : "text-fg-3 hover:text-fg")}
+                className={cn(" px-3 py-1 text-sm font-medium ring-inset", filter === f.key ? "text-accent" : "text-fg-3 hover:text-fg")}
               >
                 {f.label}
               </Link>
@@ -51,10 +51,10 @@ export default async function NotificationsPage({ searchParams }: { searchParams
           <ul className="divide-y divide-line">
             {rows.map((n) => (
               <li key={n.id} className={cn("flex flex-wrap items-start gap-4 px-5 py-4", !n.read_at && "bg-ink-2")}>
-                <span className={cn("mt-1.5 size-2.5 shrink-0 ", n.read_at ? "bg-transparent" : "bg-tea")} aria-hidden />
+                <span className={cn("mt-1.5 size-2.5 shrink-0 ", n.read_at ? "bg-transparent" : "bg-accent")} aria-hidden />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Link href={n.link} className="text-sm font-semibold text-fg hover:text-tea hover:underline">{n.title}</Link>
+                    <Link href={n.link} className="text-sm font-semibold text-fg hover:text-accent hover:underline">{n.title}</Link>
                     <Badge tone={SEVERITY_TONE[n.severity] ?? "neutral"}>{n.severity}</Badge>
                   </div>
                   <p className="mt-0.5 text-sm text-fg-3">{n.body}</p>

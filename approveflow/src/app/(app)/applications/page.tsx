@@ -79,7 +79,7 @@ export default async function ApplicationsPage({
             </select>
           </div>
           <label className="flex h-10 items-center gap-2 px-1 text-sm text-fg md:col-span-2">
-            <input type="checkbox" name="overdue" value="1" defaultChecked={sp.overdue === "1"} className="size-4 accent-[#c1f7dc]" />
+            <input type="checkbox" name="overdue" value="1" defaultChecked={sp.overdue === "1"} className="size-4 accent-[#824670]" />
             Overdue only
           </label>
           <div className="flex items-center gap-2 md:col-span-2">
@@ -93,7 +93,7 @@ export default async function ApplicationsPage({
         {sp.mine === "1" || sp.q || sp.stage || sp.status || sp.overdue ? (
           <p className="mt-3 text-sm text-fg-3">
             Showing {all.length} result(s).{" "}
-            <Link href="/applications" className="font-medium text-tea hover:underline">Clear filters</Link>
+            <Link href="/applications" className="font-medium text-accent hover:underline">Clear filters</Link>
           </p>
         ) : null}
       </Card>
@@ -104,7 +104,7 @@ export default async function ApplicationsPage({
             icon={<ClipboardList className="size-5" aria-hidden />}
             title="No applications match these filters"
             description="Try another status or stage, or clear the search."
-            action={<Link href="/applications" className="text-sm font-medium text-tea hover:underline">Clear filters</Link>}
+            action={<Link href="/applications" className="text-sm font-medium text-accent hover:underline">Clear filters</Link>}
           />
         ) : (
           <TableWrap>
@@ -127,7 +127,7 @@ export default async function ApplicationsPage({
                     <tr key={a.id} className="group transition-colors hover:bg-ink-2">
                       <td className="py-3 pr-3 align-middle"><Mark signal={sig} label={stateText} size={8} /></td>
                       <td className={td}>
-                        <Link href={`/applications/${a.id}`} className="text-fg group-hover:text-tea">{a.title}</Link>
+                        <Link href={`/applications/${a.id}`} className="text-fg group-hover:text-accent">{a.title}</Link>
                         <p className="font-mono text-[11px] text-fg-3">{a.id}</p>
                       </td>
                       <td className={td}>

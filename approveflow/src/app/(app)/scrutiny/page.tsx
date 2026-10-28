@@ -49,7 +49,7 @@ export default async function ScrutinyPage() {
               <ul className="divide-y divide-line">
                 {clarifications.slice(0, 8).map((a) => (
                   <li key={a.id} className="py-2.5">
-                    <Link href={`/applications/${a.id}`} className="text-sm font-medium text-fg hover:text-tea hover:underline">{a.id}</Link>
+                    <Link href={`/applications/${a.id}`} className="text-sm font-medium text-fg hover:text-accent hover:underline">{a.id}</Link>
                     <p className="line-clamp-2 text-xs text-fg-3">{a.clarification_reason}</p>
                   </li>
                 ))}
@@ -90,7 +90,7 @@ function Queue({ title, description, rows, now: t, empty }: { title: string; des
               {rows.map((a) => (
                 <tr key={a.id} className={isOverdue(a) ? "bg-late/5" : "hover:bg-ink-2"}>
                   <td className={td}>
-                    <Link href={`/applications/${a.id}`} className="font-medium text-fg hover:text-tea hover:underline">{a.title}</Link>
+                    <Link href={`/applications/${a.id}`} className="font-medium text-fg hover:text-accent hover:underline">{a.title}</Link>
                     <p className="font-mono text-xs text-fg-3">{a.id} · {a.stage_name}</p>
                   </td>
                   <td className={td}>{a.institution_name}</td>

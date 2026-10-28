@@ -52,7 +52,7 @@ export default async function DocumentsPage() {
                   {docs.map((d) => (
                     <tr key={d.id} className="hover:bg-ink-2">
                       <td className={td}>
-                        <Link href={`/documents/${d.id}`} className="font-medium text-fg hover:text-tea hover:underline">{d.title}</Link>
+                        <Link href={`/documents/${d.id}`} className="font-medium text-fg hover:text-accent hover:underline">{d.title}</Link>
                         <p className="font-mono text-xs text-fg-3">{d.id} · {d.category}</p>
                       </td>
                       <td className={td}>{d.institution_name}</td>
@@ -85,7 +85,7 @@ export default async function DocumentsPage() {
                   <input id="expiresOn" name="expiresOn" type="date" required className={inputCls} />
                 </Field>
                 <Field label="File" htmlFor="file" hint="PDF, PNG or JPG, up to 10 MB.">
-                  <input id="file" name="file" type="file" required accept="application/pdf,image/png,image/jpeg" className={cn(inputCls, "h-auto py-2 file:mr-3 file: file:border-0 file:bg-ink-3 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-tea")} />
+                  <input id="file" name="file" type="file" required accept="application/pdf,image/png,image/jpeg" className={cn(inputCls, "h-auto py-2 file:mr-3 file: file:border-0 file:bg-ink-3 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-accent")} />
                 </Field>
               </div>
             </ServerForm>
@@ -103,7 +103,7 @@ export default async function DocumentsPage() {
 function Stat({ label, value, tone }: { label: string; value: number; tone: "danger" | "warning" | "info" }) {
   return (
     <div className="border-t border-line pt-4">
-      <p className={cn("tnum font-display text-[30px] font-light leading-none", ({ neutral: "text-fg", info: "text-sky", warning: "text-lilac", danger: "text-late" } as Record<string, string>)[tone] ?? "text-fg")}>{value}</p>
+      <p className={cn("tnum font-display text-[30px] font-light leading-none", ({ neutral: "text-fg", info: "text-sky", warning: "text-amber", danger: "text-late" } as Record<string, string>)[tone] ?? "text-fg")}>{value}</p>
       <p className="mt-2 text-[13px] text-fg-3">{label}</p>
     </div>
   );

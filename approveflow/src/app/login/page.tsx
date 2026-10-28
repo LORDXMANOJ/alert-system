@@ -35,7 +35,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
 
       <section className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16">
         <div className="w-full max-w-md">
-          <div className="flex items-center gap-3 text-tea">
+          <div className="flex items-center gap-3 text-accent">
             <LogoMark size={28} />
             <span className="font-display text-lg text-fg">ApproveFlow</span>
           </div>
@@ -54,7 +54,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
                     aria-label={`Sign in as ${ROLE_LABELS[u.role]}, ${u.name}`}
                     className="group flex w-full items-center gap-4 py-3.5 text-left transition-colors hover:bg-ink-2 focus-visible:bg-ink-2"
                   >
-                    <span className="flex size-9 shrink-0 items-center justify-center bg-ink-3 font-display text-[11px] text-fg-2 transition-colors group-hover:bg-grape group-hover:text-fg">
+                    <span className="flex size-9 shrink-0 items-center justify-center bg-ink-3 font-display text-[11px] text-fg-2 transition-colors group-hover:bg-accent group-hover:text-ink">
                       {u.name.replace(/^(Dr|Prof)\.\s*/, "").split(" ").map((p) => p[0]).slice(0, 2).join("")}
                     </span>
                     <span className="min-w-0 flex-1">
@@ -64,7 +64,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
                         {u.institution_name ? `, ${u.institution_name}` : u.region_name ? `, ${u.region_name}` : ""}
                       </span>
                     </span>
-                    <ArrowRight className="size-4 -translate-x-2 text-tea opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100" aria-hidden />
+                    <ArrowRight className="size-4 -translate-x-2 text-accent opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100" aria-hidden />
                   </button>
                 </form>
               </li>

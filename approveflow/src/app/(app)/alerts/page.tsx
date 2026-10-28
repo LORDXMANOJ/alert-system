@@ -54,7 +54,7 @@ export default async function AlertsPage({ searchParams }: { searchParams: Promi
           <span><span className="text-fg">{Number(lastRun.created)}</span> new</span>
           <span><span className="text-fg">{Number(lastRun.duplicatesSkipped)}</span> duplicates skipped</span>
           <span><span className="text-late">{Number(lastRun.escalated)}</span> escalated</span>
-          <span><span className="text-tea">{Number(lastRun.autoResolved)}</span> cleared</span>
+          <span><span className="text-accent">{Number(lastRun.autoResolved)}</span> cleared</span>
         </p>
       ) : null}
 
@@ -63,7 +63,7 @@ export default async function AlertsPage({ searchParams }: { searchParams: Promi
         actions={
           <nav aria-label="Filter alerts" className="flex gap-5 text-sm">
             {FILTERS.map((f) => (
-              <Link key={f.key} href={`/alerts?status=${f.key}`} aria-current={active(f.key) ? "page" : undefined} className={cn("pb-1", active(f.key) ? "border-b border-tea text-fg" : "text-fg-3 hover:text-fg")}>
+              <Link key={f.key} href={`/alerts?status=${f.key}`} aria-current={active(f.key) ? "page" : undefined} className={cn("pb-1", active(f.key) ? "border-b border-accent text-fg" : "text-fg-3 hover:text-fg")}>
                 {f.label}
               </Link>
             ))}
@@ -71,7 +71,7 @@ export default async function AlertsPage({ searchParams }: { searchParams: Promi
         }
       >
         {rows.length === 0 ? (
-          <EmptyState icon={<CheckCircle2 className="size-5 text-tea" aria-hidden />} title="Nothing here." />
+          <EmptyState icon={<CheckCircle2 className="size-5 text-accent" aria-hidden />} title="Nothing here." />
         ) : (
           <ul className="divide-y divide-line">
             {rows.map((al) => {
@@ -83,7 +83,7 @@ export default async function AlertsPage({ searchParams }: { searchParams: Promi
                 <li key={id} className="grid grid-cols-[3px_1fr] gap-x-5 py-4 md:grid-cols-[3px_minmax(0,1fr)_auto_auto_minmax(260px,auto)] md:items-center md:gap-x-8">
                   <span className={cn("row-span-2 h-full min-h-10 md:row-span-1", signalBg(sig))} aria-hidden />
                   <div className="min-w-0">
-                    <Link href={String(al.link)} className="block truncate text-sm text-fg hover:text-tea">{String(al.entity_label)}</Link>
+                    <Link href={String(al.link)} className="block truncate text-sm text-fg hover:text-accent">{String(al.entity_label)}</Link>
                     <Tip label={`${String(al.message)} Raised ${fmtDateTime(al.created_at as Date)}.`}>
                       <span className="block truncate text-xs text-fg-3">{String(al.rule_name)}</span>
                     </Tip>
@@ -101,12 +101,12 @@ export default async function AlertsPage({ searchParams }: { searchParams: Promi
                     {canUpdate && al.status !== "resolved" ? (
                       <ServerForm action={resolveAlertAction} submit="Resolve" variant="secondary" ariaLabel={`Resolve alert ${id}`} className="flex items-center gap-2 [&>button]:mt-0 [&>button]:h-8 [&>button]:w-auto [&>button]:px-3 [&>button]:text-[13px]">
                         <input type="hidden" name="alertId" value={id} />
-                        <input name="note" required minLength={5} placeholder="Note" className="h-8 w-32 border border-line-2 bg-ink-2 px-2 text-[13px] text-fg placeholder:text-fg-3 focus:border-tea focus:outline-none" aria-label="Resolution note" />
+                        <input name="note" required minLength={5} placeholder="Note" className="h-8 w-32 border border-line-2 bg-ink-2 px-2 text-[13px] text-fg placeholder:text-fg-3 focus:border-accent focus:outline-none" aria-label="Resolution note" />
                       </ServerForm>
                     ) : null}
                     {al.status === "resolved" ? (
                       <Tip label={String(al.resolution_note ?? "Resolved")}>
-                        <span className="inline-flex items-center gap-1.5 text-xs text-fg-3"><Check className="size-3.5 text-tea" aria-hidden />Resolved</span>
+                        <span className="inline-flex items-center gap-1.5 text-xs text-fg-3"><Check className="size-3.5 text-accent" aria-hidden />Resolved</span>
                       </Tip>
                     ) : al.status === "acknowledged" && canUpdate ? null : al.status === "acknowledged" ? (
                       <span className="text-xs text-fg-3">Acknowledged</span>

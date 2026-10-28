@@ -108,7 +108,7 @@ function ConfirmDialog({
 }) {
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-ink/80 p-4 sm:items-center"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-fg/40 p-4 sm:items-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -132,7 +132,7 @@ function ConfirmDialog({
         transition={{ duration: 0.18, ease: "easeOut" }}
       >
         <div className="flex items-start gap-3">
-          <span className={cn("flex size-9 shrink-0 items-center justify-center ", danger ? "bg-late/10 text-late" : "bg-ink-3 text-tea")}>
+          <span className={cn("flex size-9 shrink-0 items-center justify-center ", danger ? "bg-late/10 text-late" : "bg-ink-3 text-accent")}>
             <AlertTriangle className="size-5" aria-hidden />
           </span>
           <div>
