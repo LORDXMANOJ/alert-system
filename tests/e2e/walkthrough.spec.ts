@@ -1,13 +1,16 @@
 import { test, expect, type Page } from "@playwright/test";
+import fs from "node:fs";
 import path from "node:path";
 
 /**
  * Judge walkthroughs A to E, driven through the real UI with demo sign-in.
  * Runs in order. Starts from a reset of the demonstration data (through Demo Control).
- * Screenshots go to presentation/screenshots/.
+ * Screenshots go to $SCREENSHOT_DIR, or ../presentation/screenshots when that folder exists, or docs/screenshots.
  */
 
-const SHOTS = path.resolve(__dirname, "../../../presentation/screenshots");
+const sibling = path.resolve(__dirname, "../../../presentation");
+const SHOTS = process.env.SCREENSHOT_DIR ?? (fs.existsSync(sibling) ? path.join(sibling, "screenshots") : path.resolve(__dirname, "../../docs/screenshots"));
+fs.mkdirSync(SHOTS, { recursive: true });
 const PDF = { name: "evidence.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4\n% demonstration evidence\n%%EOF\n") };
 
 /** Signs in with the demo card that contains `who` (a role label, or an account name such as "Kavya Iyer"). */

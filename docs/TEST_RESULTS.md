@@ -26,7 +26,7 @@ Results from the final run on 27 October 2026, on the code in this commit. Each 
 6. **Scenario E:** pendency report with filters → overdue report → CSV export (200, text/csv) → auditor sees audit entries and has no action buttons.
 7. Mobile (390 px): applications page has no horizontal page overflow.
 
-Screenshots from these runs are in `presentation/screenshots/` (18 images: desktop and mobile).
+Screenshots from these runs are written to `docs/screenshots/` (or the folder in `SCREENSHOT_DIR`): 18 images, desktop and mobile.
 
 ## Notes
 

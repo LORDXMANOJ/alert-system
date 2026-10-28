@@ -22,7 +22,7 @@ Status as of 27 October 2026.
 - [ ] Production identity provider and encryption at rest
 - [ ] Per-user role assignment table (one role per user today)
 - [ ] Hindi and other language support
-- [ ] Presentation deck (see `presentation/`)
+- [ ] Presentation deck (kept outside this repository)
 
 ## Next session
 

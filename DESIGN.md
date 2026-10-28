@@ -32,7 +32,7 @@ Sky Aqua is too light to carry small text on Beige, so it is used for fills and 
 - Supporting copy lives in `InfoTip` tooltips, not on the page.
 
 ## Brand
-`brand/approveflow-symbol.svg`: an A whose crossbar is the approval tick. Regal Navy on Beige. Draws itself (A, then tick) on the post-sign-in screen.
+`public/logo.svg`: an A whose crossbar is the approval tick. Regal Navy on Beige. Draws itself (A, then tick) on the post-sign-in screen.
 
 ## Imagery
 Duotone (grayscale, multiplied with navy, fading into the Beige ground) architecture photographs from Unsplash via Picsum. No people, no faces.
