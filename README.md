@@ -1,10 +1,42 @@
-# ApproveFlow AICTE — Approval & Compliance Command Centre
+# ApproveFlow AICTE: Approval & Compliance Command Centre
 
-A working prototype for **SIH 2026, problem statement SIH26262** (Integrated AICTE Approval Workflow Automation, Compliance Monitoring and Alert Management System).
+**Live demo: https://approveflow-rust.vercel.app/login**
+
+Open the link and pick any account on the sign-in page. Nothing needs installing.
+
+A working prototype for **SIH 2026, problem statement SIH26262**: Integrated AICTE Approval Workflow Automation, Compliance Monitoring and Alert Management System.
 
 > **Fictional data only.** Not an official AICTE system. Every institution, person, application and document is invented for demonstration. Automated alerts and escalations support human decisions; they never make them.
 
-## Quick start (Windows, Node 24, npm 11)
+## Try it
+
+1. Open https://approveflow-rust.vercel.app/login
+2. Choose an account. Each card is a fictional person with one role:
+   - **Dr. Asha Verma**, Administrator: people, stage durations, alert rules, reset
+   - **Ravi Kumar**, Regional officer: regional records, checks, alerts, reports
+   - **Meera Nair**, Bureau officer: scrutiny and returns for clarification
+   - **Suresh Pillai**, EVC coordinator: schedules and records visits
+   - **Anita Desai**, Committee reviewer: verifies evidence and renewals
+   - **Prof. Vikram Rao**, Competent authority: records the final decision
+   - **Farah Sheikh**, Auditor: read-only history and reports
+   - **Kavya Iyer**, Institution user (Vindhya): files applications and submits evidence
+3. Explore. Use **Ctrl K** to jump to any page.
+
+The live site keeps data only while it is running. If something looks different from the last visit, sign in as the Administrator and use **Settings → Reset data**.
+
+The first visit can take a few seconds to load.
+
+## Suggested walkthrough
+
+- **Applications → an application:** watch the stage flow and complete a stage with its checklist.
+- **EVC visits:** a visit must be recorded before its stage can close.
+- **Undertakings and Documents:** submit evidence or a renewal, then review it as the reviewer, and keep the history.
+- **Alerts:** run the checks, then see escalations and duplicates being skipped.
+- **Reports and Audit:** export a CSV, and see every action recorded.
+
+## For developers: run it locally
+
+### Setup (Windows, Node 24, npm 11)
 
 ```bash
 npm install --legacy-peer-deps
