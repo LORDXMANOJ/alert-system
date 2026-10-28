@@ -73,8 +73,8 @@ export default async function DocumentDetailPage({ params }: { params: Promise<{
                 <input type="hidden" name="versionNo" value={String(pending.version_no)} />
                 <fieldset className="mb-4 flex flex-col gap-2 sm:flex-row sm:gap-6">
                   <legend className="sr-only">Outcome</legend>
-                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="accepted" required className="size-4 accent-[#824670]" /> Accept as verified</label>
-                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="returned" className="size-4 accent-[#824670]" /> Return for corrections</label>
+                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="accepted" required className="size-4 accent-[#083D77]" /> Accept as verified</label>
+                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="returned" className="size-4 accent-[#083D77]" /> Return for corrections</label>
                 </fieldset>
                 <Field label="Remarks" htmlFor="doc-remarks" hint="Required when returning (at least 10 characters).">
                   <textarea id="doc-remarks" name="remarks" className={textareaCls} />

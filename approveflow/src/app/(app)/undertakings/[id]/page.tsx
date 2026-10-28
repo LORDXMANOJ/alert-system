@@ -81,8 +81,8 @@ export default async function UndertakingDetailPage({ params }: { params: Promis
                 <input type="hidden" name="undertakingId" value={ut.id} />
                 <fieldset className="mb-4 flex flex-col gap-2 sm:flex-row sm:gap-6">
                   <legend className="sr-only">Outcome</legend>
-                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="accepted" required className="size-4 accent-[#824670]" /> Accept evidence and verify</label>
-                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="correction_requested" className="size-4 accent-[#824670]" /> Request corrections</label>
+                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="accepted" required className="size-4 accent-[#083D77]" /> Accept evidence and verify</label>
+                  <label className="flex items-center gap-2 text-sm text-fg"><input type="radio" name="outcome" value="correction_requested" className="size-4 accent-[#083D77]" /> Request corrections</label>
                 </fieldset>
                 <Field label="Remarks" htmlFor="remarks" hint="Required when requesting corrections (at least 10 characters).">
                   <textarea id="remarks" name="remarks" className={textareaCls} />

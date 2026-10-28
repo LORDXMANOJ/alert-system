@@ -332,7 +332,7 @@ export default async function ApplicationDetailPage({
                   <legend className="mb-2 text-sm font-medium text-fg">Confirm the checklist</legend>
                   {checklist.map((item, i) => (
                     <label key={item} className="flex items-start gap-2.5 text-sm text-fg-2">
-                      <input type="checkbox" name={`c${i}`} className="mt-0.5 size-4 accent-[#824670]" />
+                      <input type="checkbox" name={`c${i}`} className="mt-0.5 size-4 accent-[#083D77]" />
                       <span>{item}</span>
                     </label>
                   ))}
@@ -362,7 +362,7 @@ export default async function ApplicationDetailPage({
                   <legend className="mb-2 text-sm font-medium text-fg">Outcome</legend>
                   {(["approved", "deferred", "rejected"] as const).map((o) => (
                     <label key={o} className="flex items-center gap-2.5 text-sm text-fg-2">
-                      <input type="radio" name="outcome" value={o} required className="size-4 accent-[#824670]" /> {DECISION_LABELS[o]}
+                      <input type="radio" name="outcome" value={o} required className="size-4 accent-[#083D77]" /> {DECISION_LABELS[o]}
                     </label>
                   ))}
                 </fieldset>
@@ -372,7 +372,7 @@ export default async function ApplicationDetailPage({
                   </Field>
                 </div>
                 <label className="mt-4 flex items-start gap-2.5 text-sm text-fg-2">
-                  <input type="checkbox" name="confirmed" required className="mt-0.5 size-4 accent-[#824670]" />
+                  <input type="checkbox" name="confirmed" required className="mt-0.5 size-4 accent-[#083D77]" />
                   I have reviewed the history, observations and evidence.
                 </label>
               </ServerForm>

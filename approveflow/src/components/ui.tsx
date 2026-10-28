@@ -19,7 +19,7 @@ export function buttonClass(variant: ButtonVariant = "primary", size: "sm" | "md
     size === "sm" ? "h-8 px-3 text-[13px]" : "h-10 px-4 text-sm",
     variant === "primary" && "bg-accent text-ink hover:bg-accent-hover",
     variant === "secondary" && "border border-line-2 text-fg hover:border-fg-3 hover:bg-ink-3",
-    variant === "danger" && "bg-late text-ink hover:bg-[#9b1d42]",
+    variant === "danger" && "bg-late text-ink hover:bg-[#8f1a22]",
     variant === "ghost" && "px-0 text-accent hover:underline",
     extra,
   );
@@ -198,7 +198,7 @@ const SIGNAL_BG: Record<Signal, string> = {
   wait: "bg-sky",
   soon: "bg-amber",
   late: "bg-late",
-  done: "bg-grape",
+  done: "bg-accent",
   none: "bg-line-2",
 };
 const SIGNAL_TEXT: Record<Signal, string> = {

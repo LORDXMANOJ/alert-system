@@ -24,7 +24,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     <main className="grid min-h-[100dvh] bg-ink lg:grid-cols-[1.05fr_1fr]">
       <section className="relative hidden overflow-hidden lg:block">
         <Image src={corridor} alt="Rows of lecture-hall seats in warm light" fill priority sizes="55vw" className="object-cover grayscale" />
-        <div className="absolute inset-0 bg-grape mix-blend-multiply" aria-hidden />
+        <div className="absolute inset-0 bg-accent mix-blend-multiply" aria-hidden />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" aria-hidden />
         <div className="absolute inset-x-12 bottom-12">
           <p className="max-w-md font-display text-[34px] font-light leading-[1.15] tracking-[-0.02em] text-fg">

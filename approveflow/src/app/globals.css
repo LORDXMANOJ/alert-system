@@ -1,29 +1,28 @@
 @import "tailwindcss";
 
 /*
- * ApproveFlow visual world: Tea Green ground, dark-grape type, hairline structure, square corners.
- * Palette: Tea Green (page), Pale Sky, Lilac, Dusty Mauve, Grape Soda. The lightest colour is the
- * background; the darker palette colours carry text, actions and structure. Status colours are
- * tuned to stay readable on the light ground: ok (green), amber (soon), late (crimson), sky (waiting).
+ * ApproveFlow visual world: Beige ground, Pitch Black type, Regal Navy actions, Sky Aqua highlights,
+ * hairline structure, square corners. Status colours are tuned to read on Beige:
+ * ok (green), amber (soon), late (red), sky (waiting), accent navy (done).
  */
 @theme inline {
-  --color-ink: #c1f7dc;
-  --color-ink-2: #d6fae8;
-  --color-ink-3: #aee8c8;
-  --color-line: #9fd8ba;
-  --color-line-2: #4f8f70;
-  --color-fg: #2b1226;
-  --color-fg-2: #4d2a45;
-  --color-fg-3: #67505f;
+  --color-ink: #f2f3d9;
+  --color-ink-2: #f8f9e8;
+  --color-ink-3: #e6e8c6;
+  --color-line: #d3d5ae;
+  --color-line-2: #7f8157;
+  --color-fg: #141204;
+  --color-fg-2: #3a3820;
+  --color-fg-3: #66644a;
 
-  --color-accent: #824670;
-  --color-accent-hover: #6b3a5c;
-  --color-sky: #3f6b77;
-  --color-mauve: #a2708a;
-  --color-grape: #824670;
-  --color-ok: #1f7a53;
+  --color-accent: #083d77;
+  --color-accent-hover: #062e5a;
+  --color-aqua: #57c4e5;
+  --color-aqua-2: #51d6ff;
+  --color-sky: #0b6e94;
+  --color-ok: #1f7a3e;
   --color-amber: #a8650f;
-  --color-late: #b8244f;
+  --color-late: #b4232c;
 
   --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-unbounded), var(--font-schibsted), sans-serif;
@@ -47,8 +46,8 @@
     caret-color: var(--color-accent);
   }
   ::selection {
-    background: var(--color-accent);
-    color: var(--color-ink);
+    background: var(--color-aqua);
+    color: var(--color-fg);
   }
   :focus-visible {
     outline: 2px solid var(--color-accent);

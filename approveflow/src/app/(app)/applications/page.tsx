@@ -79,7 +79,7 @@ export default async function ApplicationsPage({
             </select>
           </div>
           <label className="flex h-10 items-center gap-2 px-1 text-sm text-fg md:col-span-2">
-            <input type="checkbox" name="overdue" value="1" defaultChecked={sp.overdue === "1"} className="size-4 accent-[#824670]" />
+            <input type="checkbox" name="overdue" value="1" defaultChecked={sp.overdue === "1"} className="size-4 accent-[#083D77]" />
             Overdue only
           </label>
           <div className="flex items-center gap-2 md:col-span-2">

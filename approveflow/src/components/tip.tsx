@@ -43,7 +43,7 @@ export function Tip({ label, children, className, style }: { label: ReactNode; c
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0, transition: { duration: 0.08 } }}
                   transition={{ type: "spring", bounce: 0, duration: 0.25 }}
-                  className="pointer-events-none fixed z-[70] max-w-[280px] bg-fg px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_10px_28px_rgb(43_18_38/0.28)]"
+                  className="pointer-events-none fixed z-[70] max-w-[280px] bg-fg px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_10px_28px_rgb(20_18_4/0.28)]"
                   style={{
                     left: pos.x,
                     top: pos.y,

@@ -25,10 +25,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             theme="light"
             toastOptions={{
               style: {
-                background: "#d6fae8",
-                border: "1px solid #4f8f70",
+                background: "#f8f9e8",
+                border: "1px solid #7f8157",
                 borderRadius: 0,
-                color: "#2b1226",
+                color: "#141204",
                 fontFamily: "var(--font-schibsted)",
               },
             }}

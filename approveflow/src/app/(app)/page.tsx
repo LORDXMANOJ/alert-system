@@ -83,7 +83,7 @@ export default async function OverviewPage() {
           {data.attention.length === 0 ? (
             <div className="relative h-56 overflow-hidden">
               <Image src={towers} alt="City towers seen through rain on glass" fill sizes="50vw" className="object-cover grayscale" />
-              <div className="absolute inset-0 bg-grape/60 mix-blend-multiply" aria-hidden />
+              <div className="absolute inset-0 bg-accent/60 mix-blend-multiply" aria-hidden />
               <p className="absolute bottom-5 left-5 font-display text-xl font-light text-ink">Nothing waiting on your desk.</p>
             </div>
           ) : (
@@ -137,7 +137,7 @@ export default async function OverviewPage() {
               {data.activity.map((d, i) => (
                 <Tip key={d.day} label={`${new Date(d.day).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}: ${d.n} action${d.n === 1 ? "" : "s"}`} className="h-full flex-1 items-end">
                   <span
-                    className={cn("block w-full", i === data.activity.length - 1 ? "bg-accent" : d.n ? "bg-amber/70 hover:bg-amber" : "bg-line")}
+                    className={cn("block w-full", i === data.activity.length - 1 ? "bg-accent" : d.n ? "bg-aqua hover:bg-aqua-2" : "bg-line")}
                     style={{ height: `${Math.max(4, (d.n / maxDay) * 100)}%` }}
                   />
                 </Tip>
@@ -159,7 +159,7 @@ export default async function OverviewPage() {
                 <Tip label={`${r.region}: ${r.open} open, ${r.late} overdue`} className="mt-2 flex h-1.5 w-full">
                   <span className="flex h-full w-full bg-line">
                     <span className="h-full bg-late" style={{ width: `${(r.late / maxRegion) * 100}%` }} />
-                    <span className="h-full bg-sky/70" style={{ width: `${((r.open - r.late) / maxRegion) * 100}%` }} />
+                    <span className="h-full bg-aqua" style={{ width: `${((r.open - r.late) / maxRegion) * 100}%` }} />
                   </span>
                 </Tip>
               </li>
@@ -179,7 +179,7 @@ function InstitutionHome({ data, t }: { data: Data; t: Date }) {
     <div className="space-y-14">
       <section className="relative -mx-4 h-56 overflow-hidden sm:-mx-8 lg:-mx-12">
         <Image src={campus} alt="Long avenue leading to a historic institution building" fill priority sizes="100vw" className="object-cover object-[50%_40%] grayscale" />
-        <div className="absolute inset-0 bg-grape mix-blend-multiply" aria-hidden />
+        <div className="absolute inset-0 bg-accent mix-blend-multiply" aria-hidden />
         <div className="absolute inset-0 bg-gradient-to-t from-ink to-transparent" aria-hidden />
         <h1 className="absolute bottom-6 left-4 max-w-3xl font-display text-[30px] font-light leading-tight tracking-[-0.02em] text-fg sm:left-8 lg:left-12">
           {k.open} open{k.queue ? <>, <span className="text-amber">{k.queue} need your reply</span></> : null}.
